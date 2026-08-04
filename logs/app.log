@@ -479,3 +479,288 @@ Geraet: TCatPlcCtrl | ADS-State: 5
 2026-08-04 12:27:44,381 [INFO] httpx: HTTP Request: POST http://127.0.0.1:1234/v1/chat/completions "HTTP/1.1 200 OK"
 2026-08-04 12:27:44,382 [INFO] app.llm.lm_studio_client: LLM-Antwort empfangen (1063 Zeichen)
 2026-08-04 12:27:44,394 [INFO] app.ui.main_window: [LLM] Antwort empfangen (1063 Zeichen)
+2026-08-04 13:10:21,033 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELERROR: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 13:10:21,033 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELGELB: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 13:10:21,034 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELGRUEN: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 13:10:21,034 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELQUITERROR: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 13:10:21,034 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELROT: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 13:10:21,035 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BNOTAUS: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 13:10:21,035 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BSICHERUNGF1: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 13:10:21,035 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BSICHERUNGF2: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 13:10:21,035 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BSICHERUNGF3: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 13:10:21,036 [INFO] app.ads.ads_client: ADS-Verbindung getrennt
+2026-08-04 13:12:46,496 [INFO] __main__: ADS_KI_Analyse wird gestartet
+2026-08-04 13:12:49,325 [INFO] app.ui.main_window: Verbindungsversuch: 10.12.57.1 / 10.12.13.236.1.1 / Port 801
+2026-08-04 13:12:49,364 [INFO] app.ads.ads_client: ADS verifiziert: Geraet=TCatPlcCtrl ADS-State=5
+2026-08-04 13:12:49,364 [INFO] app.ui.main_window: [VERBUNDEN] ADS verifiziert - echte Runtime
+Geraet: TCatPlcCtrl | ADS-State: 5
+2026-08-04 13:12:49,365 [INFO] app.config.settings: Konfiguration gespeichert: C:\TOOLS\PhytonProjekte\ADS_KI_Analyse\config\config.json
+2026-08-04 13:12:50,855 [INFO] app.ui.main_window: Lade alle ADS-Symbole...
+2026-08-04 13:12:50,872 [INFO] app.ads.ads_client: 107 Symbole gelesen
+2026-08-04 13:12:50,950 [INFO] app.ui.main_window: 107 Symbole geladen.
+2026-08-04 13:13:20,885 [INFO] app.ui.main_window: Notifications gestoppt. Starte neu...
+2026-08-04 13:13:20,886 [INFO] app.ui.main_window: Loggen: 0 Symbole | KI: 9 Symbole
+2026-08-04 13:13:20,926 [INFO] app.ads.ads_client: Notification registriert: .BAMPELERROR (Handle 509)
+2026-08-04 13:13:20,927 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELERROR registriert
+2026-08-04 13:13:21,088 [INFO] app.ads.ads_client: Notification registriert: .BAMPELGELB (Handle 510)
+2026-08-04 13:13:21,089 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELGELB registriert
+2026-08-04 13:13:21,291 [INFO] app.ads.ads_client: Notification registriert: .BAMPELGRUEN (Handle 511)
+2026-08-04 13:13:21,291 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELGRUEN registriert
+2026-08-04 13:13:21,453 [INFO] app.ads.ads_client: Notification registriert: .BAMPELQUITERROR (Handle 512)
+2026-08-04 13:13:21,454 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELQUITERROR registriert
+2026-08-04 13:13:21,605 [INFO] app.ads.ads_client: Notification registriert: .BAMPELROT (Handle 513)
+2026-08-04 13:13:21,606 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELROT registriert
+2026-08-04 13:13:21,747 [INFO] app.ads.ads_client: Notification registriert: .BNOTAUS (Handle 514)
+2026-08-04 13:13:21,748 [INFO] app.ui.main_window: [NOTIFICATION] .BNOTAUS registriert
+2026-08-04 13:13:21,901 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF1 (Handle 515)
+2026-08-04 13:13:21,902 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF1 registriert
+2026-08-04 13:13:22,049 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF2 (Handle 516)
+2026-08-04 13:13:22,049 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF2 registriert
+2026-08-04 13:13:22,201 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF3 (Handle 517)
+2026-08-04 13:13:22,202 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF3 registriert
+2026-08-04 13:13:31,932 [INFO] app.ui.main_window: [TRIGGER] scharf: .BAMPELERROR | Flanke=rising | Rückblick=120 s
+2026-08-04 13:14:01,868 [INFO] app.ui.main_window: [TRIGGER] ausgelöst durch .BAMPELERROR
+2026-08-04 13:14:01,868 [INFO] app.ui.main_window: [TRIGGER] Snapshot eingefroren | Historie: 0 Einträge | Notifications bleiben aktiv
+2026-08-04 13:14:01,943 [INFO] app.llm.lm_studio_client: LLM-Anfrage an http://127.0.0.1:1234/v1/chat/completions (Modell: local-model)
+2026-08-04 13:14:12,413 [INFO] httpx: HTTP Request: POST http://127.0.0.1:1234/v1/chat/completions "HTTP/1.1 200 OK"
+2026-08-04 13:14:12,414 [INFO] app.llm.lm_studio_client: LLM-Antwort empfangen (1024 Zeichen)
+2026-08-04 13:14:12,417 [INFO] app.ui.main_window: [LLM] Antwort empfangen (1024 Zeichen)
+2026-08-04 13:14:44,811 [INFO] app.ui.main_window: [TRIGGER] scharf: .BAMPELERROR | Flanke=rising | Rückblick=120 s
+2026-08-04 13:14:57,917 [INFO] app.ui.main_window: [TRIGGER] ausgelöst durch .BAMPELERROR
+2026-08-04 13:14:57,918 [INFO] app.ui.main_window: [TRIGGER] Snapshot eingefroren | Historie: 0 Einträge | Notifications bleiben aktiv
+2026-08-04 13:14:57,927 [INFO] app.llm.lm_studio_client: LLM-Anfrage an http://127.0.0.1:1234/v1/chat/completions (Modell: local-model)
+2026-08-04 13:15:07,922 [INFO] httpx: HTTP Request: POST http://127.0.0.1:1234/v1/chat/completions "HTTP/1.1 200 OK"
+2026-08-04 13:15:07,923 [INFO] app.llm.lm_studio_client: LLM-Antwort empfangen (973 Zeichen)
+2026-08-04 13:15:07,925 [INFO] app.ui.main_window: [LLM] Antwort empfangen (973 Zeichen)
+2026-08-04 13:15:14,054 [INFO] app.ui.main_window: [TRIGGER] scharf: .BAMPELERROR | Flanke=rising | Rückblick=120 s
+2026-08-04 13:15:29,978 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELERROR: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 13:15:29,978 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELGELB: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 13:15:29,979 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELGRUEN: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 13:15:29,979 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELQUITERROR: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 13:15:29,979 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELROT: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 13:15:29,979 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BNOTAUS: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 13:15:29,979 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BSICHERUNGF1: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 13:15:29,980 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BSICHERUNGF2: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 13:15:29,980 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BSICHERUNGF3: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 13:15:29,980 [INFO] app.ui.main_window: Notifications gestoppt. Starte neu...
+2026-08-04 13:15:29,980 [INFO] app.ui.main_window: Loggen: 9 Symbole | KI: 9 Symbole
+2026-08-04 13:15:30,119 [INFO] app.ads.ads_client: Notification registriert: .BAMPELERROR (Handle 518)
+2026-08-04 13:15:30,120 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELERROR registriert
+2026-08-04 13:15:30,319 [INFO] app.ads.ads_client: Notification registriert: .BAMPELGELB (Handle 519)
+2026-08-04 13:15:30,320 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELGELB registriert
+2026-08-04 13:15:30,486 [INFO] app.ads.ads_client: Notification registriert: .BAMPELGRUEN (Handle 520)
+2026-08-04 13:15:30,487 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELGRUEN registriert
+2026-08-04 13:15:30,684 [INFO] app.ads.ads_client: Notification registriert: .BAMPELQUITERROR (Handle 521)
+2026-08-04 13:15:30,687 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELQUITERROR registriert
+2026-08-04 13:15:30,846 [INFO] app.ads.ads_client: Notification registriert: .BAMPELROT (Handle 522)
+2026-08-04 13:15:30,848 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELROT registriert
+2026-08-04 13:15:31,014 [INFO] app.ads.ads_client: Notification registriert: .BNOTAUS (Handle 523)
+2026-08-04 13:15:31,015 [INFO] app.ui.main_window: [NOTIFICATION] .BNOTAUS registriert
+2026-08-04 13:15:31,140 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF1 (Handle 524)
+2026-08-04 13:15:31,140 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF1 registriert
+2026-08-04 13:15:31,296 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF2 (Handle 525)
+2026-08-04 13:15:31,299 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF2 registriert
+2026-08-04 13:15:31,449 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF3 (Handle 526)
+2026-08-04 13:15:31,449 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF3 registriert
+2026-08-04 13:15:48,214 [INFO] app.ui.main_window: [TRIGGER] ausgelöst durch .BAMPELERROR
+2026-08-04 13:15:48,215 [INFO] app.ui.main_window: [TRIGGER] Snapshot eingefroren | Historie: 21 Einträge | Notifications bleiben aktiv
+2026-08-04 13:15:48,215 [INFO] app.llm.lm_studio_client: LLM-Anfrage an http://127.0.0.1:1234/v1/chat/completions (Modell: local-model)
+2026-08-04 13:16:01,660 [INFO] httpx: HTTP Request: POST http://127.0.0.1:1234/v1/chat/completions "HTTP/1.1 200 OK"
+2026-08-04 13:16:01,660 [INFO] app.llm.lm_studio_client: LLM-Antwort empfangen (1231 Zeichen)
+2026-08-04 13:16:01,663 [INFO] app.ui.main_window: [LLM] Antwort empfangen (1231 Zeichen)
+2026-08-04 13:18:20,028 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELERROR: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 13:18:20,028 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELGELB: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 13:18:20,029 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELGRUEN: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 13:18:20,029 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELQUITERROR: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 13:18:20,029 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELROT: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 13:18:20,029 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BNOTAUS: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 13:18:20,030 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BSICHERUNGF1: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 13:18:20,030 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BSICHERUNGF2: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 13:18:20,030 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BSICHERUNGF3: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 13:18:20,030 [INFO] app.ads.ads_client: ADS-Verbindung getrennt
+2026-08-04 13:19:28,370 [INFO] __main__: ADS_KI_Analyse wird gestartet
+2026-08-04 13:19:30,093 [INFO] app.ui.main_window: Verbindungsversuch: 10.12.57.1 / 10.12.13.236.1.1 / Port 801
+2026-08-04 13:19:30,135 [INFO] app.ads.ads_client: ADS verifiziert: Geraet=TCatPlcCtrl ADS-State=5
+2026-08-04 13:19:30,136 [INFO] app.ui.main_window: [VERBUNDEN] ADS verifiziert - echte Runtime
+Geraet: TCatPlcCtrl | ADS-State: 5
+2026-08-04 13:19:30,137 [INFO] app.config.settings: Konfiguration gespeichert: C:\TOOLS\PhytonProjekte\ADS_KI_Analyse\config\config.json
+2026-08-04 13:19:31,172 [INFO] app.ui.main_window: Lade alle ADS-Symbole...
+2026-08-04 13:19:31,191 [INFO] app.ads.ads_client: 107 Symbole gelesen
+2026-08-04 13:19:31,252 [INFO] app.ui.main_window: 107 Symbole geladen.
+2026-08-04 13:20:01,279 [INFO] app.ui.main_window: Notifications gestoppt. Starte neu...
+2026-08-04 13:20:01,280 [INFO] app.ui.main_window: Loggen: 8 Symbole | KI: 8 Symbole
+2026-08-04 13:20:01,358 [INFO] app.ads.ads_client: Notification registriert: .BAMPELERROR (Handle 527)
+2026-08-04 13:20:01,359 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELERROR registriert
+2026-08-04 13:20:01,508 [INFO] app.ads.ads_client: Notification registriert: .BAMPELGELB (Handle 528)
+2026-08-04 13:20:01,509 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELGELB registriert
+2026-08-04 13:20:01,707 [INFO] app.ads.ads_client: Notification registriert: .BAMPELGRUEN (Handle 529)
+2026-08-04 13:20:01,708 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELGRUEN registriert
+2026-08-04 13:20:01,860 [INFO] app.ads.ads_client: Notification registriert: .BAMPELQUITERROR (Handle 530)
+2026-08-04 13:20:01,862 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELQUITERROR registriert
+2026-08-04 13:20:02,061 [INFO] app.ads.ads_client: Notification registriert: .BAMPELROT (Handle 531)
+2026-08-04 13:20:02,062 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELROT registriert
+2026-08-04 13:20:02,261 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF1 (Handle 532)
+2026-08-04 13:20:02,262 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF1 registriert
+2026-08-04 13:20:02,421 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF2 (Handle 533)
+2026-08-04 13:20:02,424 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF2 registriert
+2026-08-04 13:20:02,573 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF3 (Handle 534)
+2026-08-04 13:20:02,574 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF3 registriert
+2026-08-04 13:23:12,583 [INFO] __main__: ADS_KI_Analyse wird gestartet
+2026-08-04 13:23:21,418 [INFO] app.ui.main_window: Verbindungsversuch: 10.12.57.1 / 10.12.13.236.1.1 / Port 801
+2026-08-04 13:23:21,460 [INFO] app.ads.ads_client: ADS verifiziert: Geraet=TCatPlcCtrl ADS-State=5
+2026-08-04 13:23:21,460 [INFO] app.ui.main_window: [VERBUNDEN] ADS verifiziert - echte Runtime
+Geraet: TCatPlcCtrl | ADS-State: 5
+2026-08-04 13:23:21,461 [INFO] app.config.settings: Konfiguration gespeichert: C:\TOOLS\PhytonProjekte\ADS_KI_Analyse\config\config.json
+2026-08-04 13:23:23,796 [INFO] app.ui.main_window: Lade alle ADS-Symbole...
+2026-08-04 13:23:23,812 [INFO] app.ads.ads_client: 107 Symbole gelesen
+2026-08-04 13:23:23,876 [INFO] app.ui.main_window: 107 Symbole geladen.
+2026-08-04 13:24:03,661 [INFO] app.ui.main_window: Notifications gestoppt. Starte neu...
+2026-08-04 13:24:03,661 [INFO] app.ui.main_window: Loggen: 10 Symbole | KI: 10 Symbole
+2026-08-04 13:24:03,701 [INFO] app.ads.ads_client: Notification registriert: .BAMPELERROR (Handle 535)
+2026-08-04 13:24:03,701 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELERROR registriert
+2026-08-04 13:24:03,889 [INFO] app.ads.ads_client: Notification registriert: .BAMPELGELB (Handle 536)
+2026-08-04 13:24:03,890 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELGELB registriert
+2026-08-04 13:24:04,041 [INFO] app.ads.ads_client: Notification registriert: .BAMPELGRUEN (Handle 537)
+2026-08-04 13:24:04,043 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELGRUEN registriert
+2026-08-04 13:24:04,163 [INFO] app.ads.ads_client: Notification registriert: .BAMPELQUITERROR (Handle 538)
+2026-08-04 13:24:04,165 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELQUITERROR registriert
+2026-08-04 13:24:04,295 [INFO] app.ads.ads_client: Notification registriert: .BAMPELROT (Handle 539)
+2026-08-04 13:24:04,296 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELROT registriert
+2026-08-04 13:24:04,457 [INFO] app.ads.ads_client: Notification registriert: .BNOTAUS (Handle 540)
+2026-08-04 13:24:04,459 [INFO] app.ui.main_window: [NOTIFICATION] .BNOTAUS registriert
+2026-08-04 13:24:04,615 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF1 (Handle 541)
+2026-08-04 13:24:04,615 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF1 registriert
+2026-08-04 13:24:04,794 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF2 (Handle 542)
+2026-08-04 13:24:04,795 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF2 registriert
+2026-08-04 13:24:05,002 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF3 (Handle 543)
+2026-08-04 13:24:05,004 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF3 registriert
+2026-08-04 13:24:05,166 [INFO] app.ads.ads_client: Notification registriert: MAIN.ISTEP (Handle 544)
+2026-08-04 13:24:05,168 [INFO] app.ui.main_window: [NOTIFICATION] MAIN.ISTEP registriert
+2026-08-04 13:24:24,284 [INFO] app.ui.main_window: [TRIGGER] scharf: .BAMPELERROR | Flanke=rising | Rückblick=120 s
+2026-08-04 13:24:28,751 [INFO] app.ui.main_window: [TRIGGER] ausgelöst durch .BAMPELERROR
+2026-08-04 13:24:28,752 [INFO] app.ui.main_window: [TRIGGER] Snapshot eingefroren | Historie: 28 Einträge | Notifications bleiben aktiv
+2026-08-04 13:24:28,826 [INFO] app.llm.lm_studio_client: LLM-Anfrage an http://127.0.0.1:1234/v1/chat/completions (Modell: local-model)
+2026-08-04 13:24:46,777 [INFO] httpx: HTTP Request: POST http://127.0.0.1:1234/v1/chat/completions "HTTP/1.1 200 OK"
+2026-08-04 13:24:46,777 [INFO] app.llm.lm_studio_client: LLM-Antwort empfangen (1523 Zeichen)
+2026-08-04 13:24:46,781 [INFO] app.ui.main_window: [LLM] Antwort empfangen (1523 Zeichen)
+2026-08-04 13:25:06,112 [INFO] app.ui.main_window: [TRIGGER] scharf: .BAMPELERROR | Flanke=rising | Rückblick=120 s
+2026-08-04 13:25:17,017 [INFO] app.ui.main_window: [TRIGGER] scharf: .BAMPELERROR | Flanke=rising | Rückblick=120 s
+2026-08-04 13:25:52,874 [INFO] app.ui.main_window: [TRIGGER] ausgelöst durch .BAMPELERROR
+2026-08-04 13:25:52,875 [INFO] app.ui.main_window: [TRIGGER] Snapshot eingefroren | Historie: 155 Einträge | Notifications bleiben aktiv
+2026-08-04 13:25:52,877 [INFO] app.llm.lm_studio_client: LLM-Anfrage an http://127.0.0.1:1234/v1/chat/completions (Modell: local-model)
+2026-08-04 13:26:09,169 [INFO] httpx: HTTP Request: POST http://127.0.0.1:1234/v1/chat/completions "HTTP/1.1 200 OK"
+2026-08-04 13:26:09,170 [INFO] app.llm.lm_studio_client: LLM-Antwort empfangen (1209 Zeichen)
+2026-08-04 13:26:09,172 [INFO] app.ui.main_window: [LLM] Antwort empfangen (1209 Zeichen)
+2026-08-04 13:27:31,860 [INFO] app.config.settings: Konfiguration gespeichert: C:\TOOLS\PhytonProjekte\ADS_KI_Analyse\config\config.json
+2026-08-04 13:27:31,861 [INFO] app.ui.main_window: [CONFIG] Einstellungen gespeichert
+2026-08-04 13:30:40,235 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELERROR: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 13:30:40,236 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELGELB: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 13:30:40,236 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELGRUEN: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 13:30:40,237 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELQUITERROR: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 13:30:40,237 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELROT: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 13:30:40,237 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BNOTAUS: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 13:30:40,237 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BSICHERUNGF1: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 13:30:40,237 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BSICHERUNGF2: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 13:30:40,237 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BSICHERUNGF3: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 13:30:40,237 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification MAIN.ISTEP: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 13:30:40,238 [INFO] app.ads.ads_client: ADS-Verbindung getrennt
+2026-08-04 13:31:53,645 [INFO] __main__: ADS_KI_Analyse wird gestartet
+2026-08-04 13:32:13,347 [INFO] app.config.settings: Konfiguration gespeichert: C:\TOOLS\PhytonProjekte\ADS_KI_Analyse\config\config.json
+2026-08-04 13:32:13,348 [INFO] app.ui.main_window: [CONFIG] Einstellungen gespeichert
+2026-08-04 13:32:15,666 [INFO] app.ui.main_window: Verbindungsversuch: 10.12.57.1 / 10.12.13.236.1.1 / Port 801
+2026-08-04 13:32:15,709 [INFO] app.ads.ads_client: ADS verifiziert: Geraet=TCatPlcCtrl ADS-State=5
+2026-08-04 13:32:15,710 [INFO] app.ui.main_window: [VERBUNDEN] ADS verifiziert - echte Runtime
+Geraet: TCatPlcCtrl | ADS-State: 5
+2026-08-04 13:32:15,710 [INFO] app.config.settings: Konfiguration gespeichert: C:\TOOLS\PhytonProjekte\ADS_KI_Analyse\config\config.json
+2026-08-04 13:32:19,018 [INFO] app.ads.ads_client: ADS-Verbindung getrennt
+2026-08-04 13:32:19,019 [INFO] app.ui.main_window: [GETRENNT] ADS-Verbindung getrennt
+2026-08-04 13:32:19,663 [INFO] app.ui.main_window: Verbindungsversuch: 10.12.57.1 / 10.12.13.236.1.1 / Port 801
+2026-08-04 13:32:19,720 [INFO] app.ads.ads_client: ADS verifiziert: Geraet=TCatPlcCtrl ADS-State=5
+2026-08-04 13:32:19,720 [INFO] app.ui.main_window: [VERBUNDEN] ADS verifiziert - echte Runtime
+Geraet: TCatPlcCtrl | ADS-State: 5
+2026-08-04 13:32:19,721 [INFO] app.config.settings: Konfiguration gespeichert: C:\TOOLS\PhytonProjekte\ADS_KI_Analyse\config\config.json
+2026-08-04 13:32:20,465 [INFO] app.ui.main_window: Lade alle ADS-Symbole...
+2026-08-04 13:32:20,485 [INFO] app.ads.ads_client: 107 Symbole gelesen
+2026-08-04 13:32:20,547 [INFO] app.ui.main_window: 107 Symbole geladen.
+2026-08-04 13:33:03,824 [INFO] app.ui.main_window: Notifications gestoppt. Starte neu...
+2026-08-04 13:33:03,825 [INFO] app.ui.main_window: Loggen: 10 Symbole | KI: 10 Symbole
+2026-08-04 13:33:03,862 [INFO] app.ads.ads_client: Notification registriert: .BAMPELERROR (Handle 545)
+2026-08-04 13:33:03,863 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELERROR registriert
+2026-08-04 13:33:03,954 [INFO] app.ads.ads_client: Notification registriert: .BAMPELGELB (Handle 546)
+2026-08-04 13:33:03,955 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELGELB registriert
+2026-08-04 13:33:04,161 [INFO] app.ads.ads_client: Notification registriert: .BAMPELGRUEN (Handle 547)
+2026-08-04 13:33:04,162 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELGRUEN registriert
+2026-08-04 13:33:04,327 [INFO] app.ads.ads_client: Notification registriert: .BAMPELQUITERROR (Handle 548)
+2026-08-04 13:33:04,333 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELQUITERROR registriert
+2026-08-04 13:33:04,505 [INFO] app.ads.ads_client: Notification registriert: .BAMPELROT (Handle 549)
+2026-08-04 13:33:04,506 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELROT registriert
+2026-08-04 13:33:04,754 [INFO] app.ads.ads_client: Notification registriert: .BNOTAUS (Handle 550)
+2026-08-04 13:33:04,755 [INFO] app.ui.main_window: [NOTIFICATION] .BNOTAUS registriert
+2026-08-04 13:33:04,966 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF1 (Handle 551)
+2026-08-04 13:33:04,967 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF1 registriert
+2026-08-04 13:33:05,172 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF2 (Handle 552)
+2026-08-04 13:33:05,173 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF2 registriert
+2026-08-04 13:33:05,364 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF3 (Handle 553)
+2026-08-04 13:33:05,366 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF3 registriert
+2026-08-04 13:33:05,486 [INFO] app.ads.ads_client: Notification registriert: MAIN.ISTEP (Handle 554)
+2026-08-04 13:33:05,487 [INFO] app.ui.main_window: [NOTIFICATION] MAIN.ISTEP registriert
+2026-08-04 13:33:12,456 [INFO] app.ui.main_window: [TRIGGER] scharf: .BAMPELERROR | Flanke=rising | Rückblick=120 s
+2026-08-04 13:34:39,718 [INFO] app.ui.main_window: [TRIGGER] ausgelöst durch .BAMPELERROR
+2026-08-04 13:34:49,731 [INFO] app.ui.main_window: [TRIGGER] Snapshot eingefroren | Historie: 105 Einträge | Notifications bleiben aktiv
+2026-08-04 13:34:49,831 [INFO] app.llm.lm_studio_client: LLM-Anfrage an http://127.0.0.1:1234/v1/chat/completions (Modell: local-model)
+2026-08-04 13:35:02,822 [INFO] httpx: HTTP Request: POST http://127.0.0.1:1234/v1/chat/completions "HTTP/1.1 200 OK"
+2026-08-04 13:35:02,823 [INFO] app.llm.lm_studio_client: LLM-Antwort empfangen (965 Zeichen)
+2026-08-04 13:35:02,825 [INFO] app.ui.main_window: [LLM] Antwort empfangen (965 Zeichen)
+2026-08-04 13:37:31,696 [INFO] app.ui.main_window: [TRIGGER] scharf: .BAMPELERROR | Flanke=rising | Rückblick=120 s
+2026-08-04 13:40:44,409 [INFO] __main__: ADS_KI_Analyse wird gestartet
+2026-08-04 13:40:51,305 [INFO] app.ui.main_window: Verbindungsversuch: 10.12.57.1 / 10.12.13.236.1.1 / Port 801
+2026-08-04 13:40:51,351 [INFO] app.ads.ads_client: ADS verifiziert: Geraet=TCatPlcCtrl ADS-State=5
+2026-08-04 13:40:51,352 [INFO] app.ui.main_window: [VERBUNDEN] ADS verifiziert - echte Runtime
+Geraet: TCatPlcCtrl | ADS-State: 5
+2026-08-04 13:40:51,353 [INFO] app.config.settings: Konfiguration gespeichert: C:\TOOLS\PhytonProjekte\ADS_KI_Analyse\config\config.json
+2026-08-04 13:40:52,235 [INFO] app.ui.main_window: Lade alle ADS-Symbole...
+2026-08-04 13:40:52,254 [INFO] app.ads.ads_client: 107 Symbole gelesen
+2026-08-04 13:40:52,315 [INFO] app.ui.main_window: 107 Symbole geladen.
+2026-08-04 13:41:32,211 [INFO] app.ui.main_window: Notifications gestoppt. Starte neu...
+2026-08-04 13:41:32,211 [INFO] app.ui.main_window: Loggen: 10 Symbole | KI: 10 Symbole
+2026-08-04 13:41:32,245 [INFO] app.ads.ads_client: Notification registriert: .BAMPELERROR (Handle 555)
+2026-08-04 13:41:32,245 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELERROR registriert
+2026-08-04 13:41:32,385 [INFO] app.ads.ads_client: Notification registriert: .BAMPELGELB (Handle 556)
+2026-08-04 13:41:32,385 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELGELB registriert
+2026-08-04 13:41:32,573 [INFO] app.ads.ads_client: Notification registriert: .BAMPELGRUEN (Handle 557)
+2026-08-04 13:41:32,573 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELGRUEN registriert
+2026-08-04 13:41:32,688 [INFO] app.ads.ads_client: Notification registriert: .BAMPELQUITERROR (Handle 558)
+2026-08-04 13:41:32,688 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELQUITERROR registriert
+2026-08-04 13:41:32,881 [INFO] app.ads.ads_client: Notification registriert: .BAMPELROT (Handle 559)
+2026-08-04 13:41:32,891 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELROT registriert
+2026-08-04 13:41:33,050 [INFO] app.ads.ads_client: Notification registriert: .BNOTAUS (Handle 560)
+2026-08-04 13:41:33,050 [INFO] app.ui.main_window: [NOTIFICATION] .BNOTAUS registriert
+2026-08-04 13:41:33,192 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF1 (Handle 561)
+2026-08-04 13:41:33,193 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF1 registriert
+2026-08-04 13:41:33,348 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF2 (Handle 562)
+2026-08-04 13:41:33,349 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF2 registriert
+2026-08-04 13:41:33,496 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF3 (Handle 563)
+2026-08-04 13:41:33,497 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF3 registriert
+2026-08-04 13:41:33,649 [INFO] app.ads.ads_client: Notification registriert: MAIN.ISTEP (Handle 564)
+2026-08-04 13:41:33,651 [INFO] app.ui.main_window: [NOTIFICATION] MAIN.ISTEP registriert
+2026-08-04 13:41:42,058 [INFO] app.ui.main_window: [TRIGGER] scharf: .BAMPELERROR | Flanke=rising | Rückblick=120 s
+2026-08-04 13:41:55,877 [INFO] app.ui.main_window: [TRIGGER] ausgelöst durch .BAMPELERROR
+2026-08-04 13:42:05,877 [INFO] app.ui.main_window: [TRIGGER] Snapshot erstellt | Historie: 53 Einträge | Symbole: .BAMPELERROR, .BAMPELGELB, .BAMPELGRUEN, .BAMPELQUITERROR, .BAMPELROT, .BNOTAUS, .BSICHERUNGF1, .BSICHERUNGF2, .BSICHERUNGF3, MAIN.ISTEP | Zeitraum: 13:39:55.877 bis 13:42:05.877 | Notifications bleiben aktiv
+2026-08-04 13:42:05,958 [INFO] app.llm.lm_studio_client: LLM-Anfrage an http://127.0.0.1:1234/v1/chat/completions (Modell: local-model)
+2026-08-04 13:42:21,278 [INFO] httpx: HTTP Request: POST http://127.0.0.1:1234/v1/chat/completions "HTTP/1.1 200 OK"
+2026-08-04 13:42:21,279 [INFO] app.llm.lm_studio_client: LLM-Antwort empfangen (1394 Zeichen)
+2026-08-04 13:42:21,282 [INFO] app.ui.main_window: [LLM] Antwort empfangen (1394 Zeichen)
+2026-08-04 13:45:38,843 [INFO] app.ui.main_window: [TRIGGER] scharf: .BAMPELERROR | Flanke=rising | Rückblick=120 s
+2026-08-04 13:46:01,319 [INFO] app.ui.main_window: [TRIGGER] ausgelöst durch .BAMPELERROR
+2026-08-04 13:46:11,313 [INFO] app.ui.main_window: [TRIGGER] Snapshot erstellt | Historie: 51 Einträge | Symbole: .BAMPELERROR, .BAMPELGELB, .BAMPELGRUEN, .BAMPELQUITERROR, .BAMPELROT, .BSICHERUNGF2, .BSICHERUNGF3, MAIN.ISTEP | Zeitraum: 13:44:01.318 bis 13:46:11.311 | Notifications bleiben aktiv
+2026-08-04 13:46:11,316 [INFO] app.llm.lm_studio_client: LLM-Anfrage an http://127.0.0.1:1234/v1/chat/completions (Modell: local-model)
+2026-08-04 13:46:28,131 [INFO] httpx: HTTP Request: POST http://127.0.0.1:1234/v1/chat/completions "HTTP/1.1 200 OK"
+2026-08-04 13:46:28,132 [INFO] app.llm.lm_studio_client: LLM-Antwort empfangen (1478 Zeichen)
+2026-08-04 13:46:28,134 [INFO] app.ui.main_window: [LLM] Antwort empfangen (1478 Zeichen)
+2026-08-04 13:46:41,934 [INFO] app.ui.main_window: [TRIGGER] scharf: .BAMPELERROR | Flanke=rising | Rückblick=120 s
+2026-08-04 13:47:09,319 [INFO] app.ui.main_window: [TRIGGER] ausgelöst durch .BAMPELERROR
+2026-08-04 13:47:19,312 [INFO] app.ui.main_window: [TRIGGER] Snapshot erstellt | Historie: 164 Einträge | Symbole: .BAMPELERROR, .BAMPELGELB, .BAMPELGRUEN, .BAMPELQUITERROR, .BAMPELROT, .BSICHERUNGF3, MAIN.ISTEP | Zeitraum: 13:45:09.318 bis 13:47:19.309 | Notifications bleiben aktiv
+2026-08-04 13:47:19,315 [INFO] app.llm.lm_studio_client: LLM-Anfrage an http://127.0.0.1:1234/v1/chat/completions (Modell: local-model)
+2026-08-04 13:47:42,313 [INFO] httpx: HTTP Request: POST http://127.0.0.1:1234/v1/chat/completions "HTTP/1.1 200 OK"
+2026-08-04 13:47:42,313 [INFO] app.llm.lm_studio_client: LLM-Antwort empfangen (1742 Zeichen)
+2026-08-04 13:47:42,316 [INFO] app.ui.main_window: [LLM] Antwort empfangen (1742 Zeichen)

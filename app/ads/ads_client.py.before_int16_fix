@@ -41,34 +41,10 @@ SUPPORTED_TYPES = set(_TYPE_MAP.keys())
 
 
 def _normalize_type(tc_type: str):
-    """Normalisiert TwinCAT-Typnamen fuer den internen ADS-Datentyp."""
-    upper = " ".join(str(tc_type).upper().strip().split())
-
-    # STRING(80), STRING(256), STRING[80] usw. bleiben STRING.
+    upper = tc_type.upper().strip()
     if upper.startswith("STRING"):
         return "STRING", True
-
-    # TwinCAT-Symboluploads liefern bei IEC-Integer-Typen teilweise
-    # INT16/UINT16/DINT32 statt INT/UINT/DINT.
-    aliases = {
-        "INT16": "INT",
-        "SHORT": "INT",
-        "DINT32": "DINT",
-        "LONG": "DINT",
-        "UINT16": "UINT",
-        "UDINT32": "UDINT",
-        "WORD": "UINT",
-        "BYTE": "UINT",
-        "DWORD": "UDINT",
-        "SINT": "INT",
-        "USINT": "UINT",
-        "LINT": "DINT",
-        "ULINT": "UDINT",
-    }
-
-    compact = upper.replace(" ", "").replace("_", "")
-    normalized_name = aliases.get(compact, upper)
-    norm = _TYPE_MAP.get(normalized_name)
+    norm = _TYPE_MAP.get(upper)
     if norm:
         return norm, True
     return upper, False

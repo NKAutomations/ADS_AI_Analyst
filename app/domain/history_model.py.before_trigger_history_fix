@@ -36,22 +36,9 @@ class HistoryModel:
             # Neue deque mit neuem Limit, älteste Einträge fallen weg
             self._entries = deque(self._entries, maxlen=value)
 
-    def add(
-        self,
-        symbol: str,
-        data_type: str,
-        value: object,
-        timestamp: Optional[datetime] = None,
-    ) -> None:
-        """Fuegt einen Verlaufseintrag mit ADS-Zeitstempel hinzu.
-
-        Der Callback-Zeitstempel ist wichtig fuer Trigger-Rueckblicke:
-        Die Qt-Signalzustellung kann zeitlich spaeter erfolgen als das
-        eigentliche ADS-Ereignis. Ohne diesen Parameter wuerden Eintraege
-        kuenstlich auf datetime.now() datiert und aus dem Fenster fallen.
-        """
+    def add(self, symbol: str, data_type: str, value: object) -> None:
         entry = HistoryEntry(
-            timestamp=timestamp or datetime.now(),
+            timestamp=datetime.now(),
             symbol=symbol,
             data_type=data_type,
             value=value,

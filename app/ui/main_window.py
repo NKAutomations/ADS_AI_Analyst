@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import logging
 import threading
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Dict, List, Optional
 
 from PySide6.QtCore import Qt, QTimer, Signal, QObject
@@ -32,6 +32,7 @@ from PySide6.QtWidgets import (
     QDoubleSpinBox,
     QPlainTextEdit,
     QTextBrowser,
+    QComboBox,
     QPushButton,
     QSizePolicy,
     QSpinBox,
@@ -219,6 +220,14 @@ class MainWindow(QMainWindow):
         self.llm_client: Optional[LmStudioClient] = None
         self.signals = WorkerSignals()
         self._last_values: Dict[str, object] = {}
+        self._trigger_symbol: Optional[str] = None
+        self._trigger_armed = False
+        self._trigger_last_value: Optional[bool] = None
+        self._trigger_edge = "rising"
+        self._trigger_window_seconds = 120
+        self._trigger_post_seconds = 10
+        self._trigger_analysis_running = False
+        self._pending_trigger_timestamp: Optional[datetime] = None
         self._build_ui()
         self._connect_signals()
         self._apply_config_to_ui()
@@ -358,6 +367,40 @@ class MainWindow(QMainWindow):
         max_row.addWidget(self.sb_max_entries)
         max_row.addStretch()
         layout.addLayout(max_row)
+
+        trigger_box = QGroupBox("Automatische Triggeranalyse")
+        trigger_layout = QHBoxLayout(trigger_box)
+        trigger_layout.addWidget(QLabel("BOOL-Trigger:"))
+        self.cb_trigger_symbol = QComboBox()
+        self.cb_trigger_symbol.setPlaceholderText("Nach Symbolladen auswählen")
+        self.cb_trigger_symbol.setMinimumWidth(220)
+        trigger_layout.addWidget(self.cb_trigger_symbol)
+        trigger_layout.addWidget(QLabel("auslösen bei:"))
+        self.cb_trigger_edge = QComboBox()
+        self.cb_trigger_edge.addItem("FALSE → TRUE", "rising")
+        self.cb_trigger_edge.addItem("TRUE → FALSE", "falling")
+        self.cb_trigger_edge.addItem("beide Flanken", "both")
+        trigger_layout.addWidget(self.cb_trigger_edge)
+        trigger_layout.addWidget(QLabel("Rückblick:"))
+        self.cb_trigger_window = QComboBox()
+        for seconds, label in [(30, "30 s"), (60, "1 min"), (120, "2 min"), (300, "5 min"), (600, "10 min")]:
+            self.cb_trigger_window.addItem(label, seconds)
+        self.cb_trigger_window.setCurrentIndex(2)
+        trigger_layout.addWidget(self.cb_trigger_window)
+        trigger_layout.addWidget(QLabel("Nachlauf:"))
+        self.sb_trigger_post = QSpinBox()
+        self.sb_trigger_post.setRange(0, 300)
+        self.sb_trigger_post.setValue(10)
+        self.sb_trigger_post.setSuffix(" s")
+        trigger_layout.addWidget(self.sb_trigger_post)
+        self.btn_trigger_arm = QPushButton("Trigger scharf schalten")
+        self.btn_trigger_arm.setEnabled(False)
+        self.btn_trigger_arm.setStyleSheet("background-color: #2e7d32; color: white; font-weight: bold;")
+        trigger_layout.addWidget(self.btn_trigger_arm)
+        self.lbl_trigger_status = QLabel("Nicht scharf")
+        self.lbl_trigger_status.setStyleSheet("color: gray; font-weight: bold;")
+        trigger_layout.addWidget(self.lbl_trigger_status)
+        layout.addWidget(trigger_box)
 
         return box
 
@@ -515,6 +558,11 @@ class MainWindow(QMainWindow):
         self.btn_analyze.clicked.connect(self._on_analyze)
         self.btn_check_llm.clicked.connect(self._on_check_llm)
         self.btn_settings.clicked.connect(self._open_settings)
+        self.btn_trigger_arm.clicked.connect(self._arm_trigger)
+        self.cb_trigger_symbol.currentIndexChanged.connect(self._on_trigger_config_changed)
+        self.cb_trigger_edge.currentIndexChanged.connect(self._on_trigger_config_changed)
+        self.cb_trigger_window.currentIndexChanged.connect(self._on_trigger_config_changed)
+        self.sb_trigger_post.valueChanged.connect(self._on_trigger_config_changed)
         self.signals.log_message.connect(self._append_sys)
         self.signals.status_message.connect(self.status_bar.showMessage)
         self.signals.connection_result.connect(self._on_connection_result)
@@ -637,8 +685,58 @@ class MainWindow(QMainWindow):
             var_states.append(vs)
         self.state_model.set_symbols(var_states)
         self._populate_table(var_states)
+        self._populate_trigger_symbols(var_states)
         self.btn_apply.setEnabled(True)
+        self.btn_trigger_arm.setEnabled(bool(self.cb_trigger_symbol.currentData()))
         self._append_sys(str(len(symbols)) + " Symbole geladen.")
+
+    def _populate_trigger_symbols(self, var_states: list) -> None:
+        current = self._trigger_symbol
+        self.cb_trigger_symbol.blockSignals(True)
+        self.cb_trigger_symbol.clear()
+        self.cb_trigger_symbol.addItem("-- kein Trigger ausgewählt --", None)
+        for vs in var_states:
+            if vs.supported and vs.data_type == "BOOL":
+                self.cb_trigger_symbol.addItem(vs.symbol, vs.symbol)
+        if current:
+            index = self.cb_trigger_symbol.findData(current)
+            if index >= 0:
+                self.cb_trigger_symbol.setCurrentIndex(index)
+        self.cb_trigger_symbol.blockSignals(False)
+        self.btn_trigger_arm.setEnabled(bool(self.cb_trigger_symbol.currentData()))
+
+    def _on_trigger_config_changed(self) -> None:
+        self._trigger_symbol = self.cb_trigger_symbol.currentData()
+        self._trigger_edge = self.cb_trigger_edge.currentData() or "rising"
+        self._trigger_window_seconds = int(self.cb_trigger_window.currentData() or 120)
+        self._trigger_post_seconds = int(self.sb_trigger_post.value())
+        self._trigger_last_value = None
+        self._trigger_armed = False
+        self.lbl_trigger_status.setText("Nicht scharf")
+        self.lbl_trigger_status.setStyleSheet("color: gray; font-weight: bold;")
+        self.btn_trigger_arm.setText("Trigger scharf schalten")
+        self.btn_trigger_arm.setEnabled(bool(self._trigger_symbol))
+
+    def _arm_trigger(self) -> None:
+        self._trigger_symbol = self.cb_trigger_symbol.currentData()
+        self._trigger_edge = self.cb_trigger_edge.currentData() or "rising"
+        self._trigger_window_seconds = int(self.cb_trigger_window.currentData() or 120)
+        if not self._trigger_symbol:
+            return
+        self._trigger_last_value = None
+        self._trigger_armed = True
+        self.lbl_trigger_status.setText("SCHARF")
+        self.lbl_trigger_status.setStyleSheet("color: #087f23; font-weight: bold;")
+        self.btn_trigger_arm.setText("Trigger ist scharf")
+        self._append_sys("[TRIGGER] scharf: " + self._trigger_symbol + " | Flanke=" + self._trigger_edge + " | Rückblick=" + str(self._trigger_window_seconds) + " s")
+
+    def _trigger_matches(self, previous: object, current: object) -> bool:
+        if previous is None or not isinstance(current, bool) or not isinstance(previous, bool):
+            return False
+        rising = not previous and current
+        falling = previous and not current
+        return ((self._trigger_edge in ("rising", "both") and rising) or
+                (self._trigger_edge in ("falling", "both") and falling))
 
     def _populate_table(self, var_states: list) -> None:
         self.var_table.setSortingEnabled(False)
@@ -722,7 +820,11 @@ class MainWindow(QMainWindow):
         self._last_values.clear()
         self._append_sys("Notifications gestoppt. Starte neu...")
         all_vars = self.state_model.get_all()
-        to_monitor = [v for v in all_vars if (v.show or v.log or v.ai) and v.supported]
+        to_monitor = [
+            v for v in all_vars
+            if (v.show or v.log or v.ai or v.symbol == self._trigger_symbol)
+            and v.supported
+        ]
         log_syms = [v.symbol for v in to_monitor if v.log]
         ai_syms = [v.symbol for v in to_monitor if v.ai]
         self._append_sys(
@@ -761,13 +863,106 @@ class MainWindow(QMainWindow):
         vs = self.state_model.get(symbol)
         if vs is None:
             return
+
+        if symbol == self._trigger_symbol and isinstance(value, bool):
+            if self._trigger_last_value is None:
+                self._trigger_last_value = value
+            elif self._trigger_armed and self._trigger_matches(self._trigger_last_value, value):
+                self._trigger_armed = False
+                self.lbl_trigger_status.setText("AUSGELÖST - Analyse läuft")
+                self.lbl_trigger_status.setStyleSheet("color: #1565c0; font-weight: bold;")
+                self.btn_trigger_arm.setText("Trigger erneut scharf schalten")
+                self._append_sys("[TRIGGER] ausgelöst durch " + symbol)
+                self._pending_trigger_timestamp = timestamp
+                self.lbl_trigger_status.setText("AUSGELÖST - Nachlauf läuft")
+                self.lbl_trigger_status.setStyleSheet("color: #ef6c00; font-weight: bold;")
+                QTimer.singleShot(
+                    self._trigger_post_seconds * 1000,
+                    lambda ts=timestamp: self._start_trigger_analysis(ts),
+                )
+            self._trigger_last_value = value
+
+        # KI-Daten müssen auch dann historisch aufgezeichnet werden, wenn
+        # der Benutzer nur "KI" und nicht zusätzlich "Loggen" aktiviert hat.
+        if changed and (vs.log or vs.ai or symbol == self._trigger_symbol):
+            # Den Zeitstempel aus dem ADS-Callback verwenden. Dadurch bleibt
+            # der Trigger-Rueckblick auch bei Qt-Queue-/Thread-Verzoegerungen
+            # zeitlich korrekt.
+            self.history_model.add(
+                symbol,
+                vs.data_type,
+                value,
+                timestamp=timestamp,
+            )
+
         if changed and vs.log:
-            self.history_model.add(symbol, vs.data_type, value)
+
             ts_str = timestamp.strftime("%H:%M:%S.%f")[:-3]
             prev_str = str(prev) if prev is not None else "?"
             self.te_log.appendPlainText(
                 "[" + ts_str + "] " + symbol + " = " + str(value) + " (vorher: " + prev_str + ")"
             )
+
+    def _start_trigger_analysis(self, trigger_ts: datetime) -> None:
+        if self._trigger_analysis_running:
+            return
+        self._trigger_analysis_running = True
+        window_from = trigger_ts - timedelta(seconds=self._trigger_window_seconds)
+        # Nach dem Trigger laufen die ADS-Notifications weiter. Der Endzeitpunkt
+        # ist deshalb der tatsächliche Analysezeitpunkt nach dem Nachlauf.
+        window_to = datetime.now()
+        self.lbl_trigger_status.setText("AUSGELÖST - Analyse läuft")
+        self.lbl_trigger_status.setStyleSheet("color: #1565c0; font-weight: bold;")
+        ai_vars = self.state_model.get_ai_symbols()
+        history = self.history_model.get_window(
+            from_dt=window_from,
+            to_dt=window_to,
+            symbols=[v.symbol for v in ai_vars],
+        )
+        system_prompt = self.te_prompt.toPlainText().strip()
+        ads_connected = self.ads_client.connected if self.ads_client else False
+        user_message = build_user_message(
+            ai_variables=ai_vars,
+            history=history,
+            from_dt=window_from,
+            to_dt=window_to,
+            ads_connected=ads_connected,
+        )
+        history_symbols = sorted({entry.symbol for entry in history})
+        self._append_sys(
+            "[TRIGGER] Snapshot erstellt | Historie: " + str(len(history))
+            + " Einträge | Symbole: " + (", ".join(history_symbols) if history_symbols else "keine")
+            + " | Zeitraum: " + window_from.strftime("%H:%M:%S.%f")[:-3]
+            + " bis " + window_to.strftime("%H:%M:%S.%f")[:-3]
+            + " | Notifications bleiben aktiv"
+        )
+        if not history:
+            self._append_sys(
+                "[TRIGGER-WARNUNG] Keine Historieneinträge im Analysefenster. "
+                "Prüfe KI-Auswahl, Auswahl anwenden und Notification-Status."
+            )
+        self.te_result.setMarkdown("*Automatische Triggeranalyse läuft ...*")
+        self.btn_analyze.setEnabled(False)
+
+        llm = self.llm_client or LmStudioClient(
+            base_url=self.le_llm_url.text().strip() or "http://127.0.0.1:1234/v1",
+            model=self.le_model.text().strip(),
+            timeout_seconds=float(self.cfg.get("llm", {}).get("timeout_seconds", 60.0)),
+            temperature=float(self.cfg.get("llm", {}).get("temperature", 0.1)),
+            max_tokens=int(self.cfg.get("llm", {}).get("max_tokens", 1200)),
+            context_length=int(self.cfg.get("llm", {}).get("context_length", 4096)),
+            top_p=float(self.cfg.get("llm", {}).get("top_p", 0.95)),
+            top_k=int(self.cfg.get("llm", {}).get("top_k", 40)),
+            repeat_penalty=float(self.cfg.get("llm", {}).get("repeat_penalty", 1.1)),
+            stream=bool(self.cfg.get("llm", {}).get("stream", False)),
+        )
+        self.llm_client = llm
+
+        def _worker():
+            answer, ok = llm.analyze(system_prompt, user_message)
+            self.signals.analysis_result.emit(answer, ok)
+
+        threading.Thread(target=_worker, daemon=True).start()
 
     def _refresh_table(self) -> None:
         for row in range(self.var_table.rowCount()):
@@ -867,6 +1062,7 @@ class MainWindow(QMainWindow):
 
     def _on_analysis_result(self, answer: str, ok: bool) -> None:
         self.btn_analyze.setEnabled(True)
+        self._trigger_analysis_running = False
         if ok and answer.strip():
             self.te_result.setMarkdown(answer)
         else:
