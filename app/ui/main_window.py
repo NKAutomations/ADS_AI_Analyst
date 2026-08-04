@@ -228,6 +228,10 @@ class MainWindow(QMainWindow):
         self._trigger_post_seconds = 10
         self._trigger_analysis_running = False
         self._pending_trigger_timestamp: Optional[datetime] = None
+        self._recording_status = "STOPPED"
+        self._recording_error = ""
+        self._recording_generation = 0
+        self._recording_worker_active = False
         self._build_ui()
         self._connect_signals()
         self._apply_config_to_ui()
@@ -332,10 +336,19 @@ class MainWindow(QMainWindow):
         btn_row = QHBoxLayout()
         self.btn_load_symbols = QPushButton("Alle Symbole auslesen")
         self.btn_load_symbols.setEnabled(False)
-        self.btn_apply = QPushButton("Auswahl anwenden und Notifications starten")
-        self.btn_apply.setEnabled(False)
+        self.btn_start_recording = QPushButton("Aufzeichnung starten")
+        self.btn_start_recording.setEnabled(False)
+        self.btn_start_recording.setStyleSheet(
+            "background-color: #2e7d32; color: white; font-weight: bold;"
+        )
+        self.btn_stop_recording = QPushButton("Aufzeichnung stoppen")
+        self.btn_stop_recording.setEnabled(False)
+        self.btn_stop_recording.setStyleSheet(
+            "background-color: #c62828; color: white; font-weight: bold;"
+        )
         btn_row.addWidget(self.btn_load_symbols)
-        btn_row.addWidget(self.btn_apply)
+        btn_row.addWidget(self.btn_start_recording)
+        btn_row.addWidget(self.btn_stop_recording)
         layout.addLayout(btn_row)
 
         filter_row = QHBoxLayout()
@@ -347,9 +360,9 @@ class MainWindow(QMainWindow):
         layout.addLayout(filter_row)
 
         self.var_table = QTableWidget()
-        self.var_table.setColumnCount(8)
+        self.var_table.setColumnCount(6)
         self.var_table.setHorizontalHeaderLabels(
-            ["Symbol", "Typ", "TC-Typ", "Kommentar", "Anzeigen", "Loggen", "KI", "Wert"]
+            ["Symbol", "Typ", "TC-Typ", "Kommentar", "Aufzeichnen", "Wert"]
         )
         self.var_table.horizontalHeader().setSectionResizeMode(0, QHeaderView.Stretch)
         self.var_table.horizontalHeader().setSectionResizeMode(3, QHeaderView.Stretch)
@@ -491,7 +504,7 @@ class MainWindow(QMainWindow):
         log_widget = QWidget()
         log_layout = QVBoxLayout(log_widget)
         info = QLabel(
-            "Nur Änderungen von Variablen mit gesetztem 'Loggen'-Haken werden hier angezeigt."
+            "Aufgezeichnete Variablen werden live überwacht, historisch gespeichert und für die KI verwendet."
         )
         info.setStyleSheet("color: gray; font-size: 10px;")
         log_layout.addWidget(info)
@@ -507,7 +520,7 @@ class MainWindow(QMainWindow):
         btn_row.addWidget(btn_clear_log)
         btn_row.addStretch()
         log_layout.addLayout(btn_row)
-        tabs.addTab(log_widget, "Protokoll (geloggte Änderungen)")
+        tabs.addTab(log_widget, "Protokoll (Aufzeichnung)")
 
         # --- Tab 2: Systemmeldungen ---
         sys_widget = QWidget()
@@ -554,7 +567,8 @@ class MainWindow(QMainWindow):
         self.btn_connect.clicked.connect(self._on_connect)
         self.btn_disconnect.clicked.connect(self._on_disconnect)
         self.btn_load_symbols.clicked.connect(self._on_load_symbols)
-        self.btn_apply.clicked.connect(self._on_apply_selection)
+        self.btn_start_recording.clicked.connect(self._start_recording)
+        self.btn_stop_recording.clicked.connect(self._stop_recording)
         self.btn_analyze.clicked.connect(self._on_analyze)
         self.btn_check_llm.clicked.connect(self._on_check_llm)
         self.btn_settings.clicked.connect(self._open_settings)
@@ -564,7 +578,7 @@ class MainWindow(QMainWindow):
         self.cb_trigger_window.currentIndexChanged.connect(self._on_trigger_config_changed)
         self.sb_trigger_post.valueChanged.connect(self._on_trigger_config_changed)
         self.signals.log_message.connect(self._append_sys)
-        self.signals.status_message.connect(self.status_bar.showMessage)
+        self.signals.status_message.connect(self._on_recording_worker_status)
         self.signals.connection_result.connect(self._on_connection_result)
         self.signals.symbols_loaded.connect(self._on_symbols_loaded)
         self.signals.value_updated.connect(self._on_value_updated)
@@ -615,8 +629,9 @@ class MainWindow(QMainWindow):
 
     def _on_connection_result(self, ok: bool, msg: str) -> None:
         if ok:
-            self.lbl_conn_status.setText("Verbunden")
+            self.lbl_conn_status.setText("ADS verifiziert – echte TwinCAT-Runtime")
             self.lbl_conn_status.setStyleSheet("color: green; font-weight: bold;")
+            self.btn_connect.setEnabled(False)
             self.btn_disconnect.setEnabled(True)
             self.btn_load_symbols.setEnabled(True)
             self._append_sys("[VERBUNDEN] " + msg)
@@ -630,6 +645,8 @@ class MainWindow(QMainWindow):
             QMessageBox.critical(self, "Verbindungsfehler", msg)
 
     def _on_disconnect(self) -> None:
+        # Notifications vor dem Schließen der ADS-Verbindung entfernen.
+        self._stop_recording()
         if self.ads_client:
             self.ads_client.disconnect()
         self.lbl_conn_status.setText("Getrennt")
@@ -637,7 +654,7 @@ class MainWindow(QMainWindow):
         self.btn_connect.setEnabled(True)
         self.btn_disconnect.setEnabled(False)
         self.btn_load_symbols.setEnabled(False)
-        self.btn_apply.setEnabled(False)
+        self.btn_start_recording.setEnabled(False)
         self.state_model.clear()
         self.var_table.setRowCount(0)
         self._last_values.clear()
@@ -686,8 +703,8 @@ class MainWindow(QMainWindow):
         self.state_model.set_symbols(var_states)
         self._populate_table(var_states)
         self._populate_trigger_symbols(var_states)
-        self.btn_apply.setEnabled(True)
-        self.btn_trigger_arm.setEnabled(bool(self.cb_trigger_symbol.currentData()))
+        self.btn_start_recording.setEnabled(bool(self.ads_client and self.ads_client.connected))
+        self._update_control_states()
         self._append_sys(str(len(symbols)) + " Symbole geladen.")
 
     def _populate_trigger_symbols(self, var_states: list) -> None:
@@ -715,20 +732,48 @@ class MainWindow(QMainWindow):
         self.lbl_trigger_status.setText("Nicht scharf")
         self.lbl_trigger_status.setStyleSheet("color: gray; font-weight: bold;")
         self.btn_trigger_arm.setText("Trigger scharf schalten")
-        self.btn_trigger_arm.setEnabled(bool(self._trigger_symbol))
+        self.btn_trigger_arm.setEnabled(bool(self._trigger_symbol) and self._recording_status == "RECORDING")
+        self._update_control_states()
 
     def _arm_trigger(self) -> None:
+        if self._recording_status != "RECORDING":
+            return
         self._trigger_symbol = self.cb_trigger_symbol.currentData()
         self._trigger_edge = self.cb_trigger_edge.currentData() or "rising"
         self._trigger_window_seconds = int(self.cb_trigger_window.currentData() or 120)
+        self._trigger_post_seconds = int(self.sb_trigger_post.value())
         if not self._trigger_symbol:
+            return
+        trigger_state = self.state_model.get(self._trigger_symbol)
+        if trigger_state is None or not trigger_state.recording:
+            QMessageBox.warning(
+                self,
+                "Trigger nicht aufgezeichnet",
+                "Der Trigger muss in der Tabelle mit 'Aufzeichnen' ausgewählt sein.",
+            )
+            return
+        if self._trigger_armed:
+            self._trigger_armed = False
+            self._trigger_last_value = None
+            self.lbl_trigger_status.setText("Trigger gestoppt")
+            self.lbl_trigger_status.setStyleSheet("color: #ef6c00; font-weight: bold;")
+            self.btn_trigger_arm.setText("Trigger scharf schalten")
+            self._append_sys("[TRIGGER] manuell gestoppt")
+            self._update_control_states()
             return
         self._trigger_last_value = None
         self._trigger_armed = True
         self.lbl_trigger_status.setText("SCHARF")
         self.lbl_trigger_status.setStyleSheet("color: #087f23; font-weight: bold;")
-        self.btn_trigger_arm.setText("Trigger ist scharf")
-        self._append_sys("[TRIGGER] scharf: " + self._trigger_symbol + " | Flanke=" + self._trigger_edge + " | Rückblick=" + str(self._trigger_window_seconds) + " s")
+        self.btn_trigger_arm.setText("Trigger stoppen")
+        self.btn_trigger_arm.setStyleSheet("background-color: #ef6c00; color: white; font-weight: bold;")
+        self._append_sys(
+            "[TRIGGER] scharf: " + self._trigger_symbol
+            + " | Flanke=" + self._trigger_edge
+            + " | Rückblick=" + str(self._trigger_window_seconds) + " s"
+            + " | Nachlauf=" + str(self._trigger_post_seconds) + " s"
+        )
+        self._update_control_states()
 
     def _trigger_matches(self, previous: object, current: object) -> bool:
         if previous is None or not isinstance(current, bool) or not isinstance(previous, bool):
@@ -748,40 +793,47 @@ class MainWindow(QMainWindow):
             self.var_table.setItem(row, 1, QTableWidgetItem(vs.data_type))
             self.var_table.setItem(row, 2, QTableWidgetItem(vs.tc_type))
             self.var_table.setItem(row, 3, QTableWidgetItem(vs.comment))
-            for col, attr in [(4, "show"), (5, "log"), (6, "ai")]:
-                cb = QCheckBox()
-                cb.setChecked(getattr(vs, attr) if attr != "show" else False)
-                if not vs.supported and col in (5, 6):
-                    cb.setEnabled(False)
-                    cb.setToolTip("Komplexer Typ - nicht unterstuetzt")
-                cb.stateChanged.connect(
-                    lambda state, s=vs.symbol, c=col: self._on_checkbox_changed(s, c, state)
-                )
-                cell_widget = QWidget()
-                cell_layout = QHBoxLayout(cell_widget)
-                cell_layout.addWidget(cb)
-                cell_layout.setAlignment(Qt.AlignCenter)
-                cell_layout.setContentsMargins(0, 0, 0, 0)
-                self.var_table.setCellWidget(row, col, cell_widget)
+            cb = QCheckBox()
+            cb.setChecked(bool(vs.recording))
+            if not vs.supported:
+                cb.setEnabled(False)
+                cb.setToolTip("Komplexer oder unbekannter Typ - nicht unterstützt")
+            cb.stateChanged.connect(
+                lambda state, s=vs.symbol: self._on_recording_checkbox_changed(s, state)
+            )
+            cell_widget = QWidget()
+            cell_layout = QHBoxLayout(cell_widget)
+            cell_layout.addWidget(cb)
+            cell_layout.setAlignment(Qt.AlignCenter)
+            cell_layout.setContentsMargins(0, 0, 0, 0)
+            self.var_table.setCellWidget(row, 4, cell_widget)
             val_item = QTableWidgetItem("-")
             if not vs.supported:
                 val_item.setForeground(QColor("gray"))
-                val_item.setText("(nicht unterstuetzt)")
-            self.var_table.setItem(row, 7, val_item)
+                val_item.setText("(nicht unterstützt)")
+            self.var_table.setItem(row, 5, val_item)
         self.var_table.setSortingEnabled(True)
         self._apply_filter()
 
-    def _on_checkbox_changed(self, symbol: str, col: int, state: int) -> None:
-        vs = self.state_model.get(symbol)
-        if vs is None:
-            return
-        checked = state == Qt.Checked
-        if col == 4:
-            self.state_model.set_selection(symbol, checked, vs.log, vs.ai)
-        elif col == 5:
-            self.state_model.set_selection(symbol, vs.show, checked, vs.ai)
-        elif col == 6:
-            self.state_model.set_selection(symbol, vs.show, vs.log, checked)
+    def _on_recording_checkbox_changed(self, symbol: str, state: int) -> None:
+        self.state_model.set_recording(symbol, state == Qt.Checked)
+        self._update_control_states()
+
+    def _sync_selection_from_table(self) -> None:
+        for row in range(self.var_table.rowCount()):
+            sym_item = self.var_table.item(row, 0)
+            if sym_item is None:
+                continue
+            self.state_model.set_recording(
+                sym_item.text(), self._get_checkbox_state(row, 4)
+            )
+
+    def _get_checkbox_state(self, row: int, col: int) -> bool:
+        cell = self.var_table.cellWidget(row, col)
+        if cell is None:
+            return False
+        cb = cell.findChild(QCheckBox)
+        return cb.isChecked() if cb else False
 
     def _apply_filter(self) -> None:
         text = self.le_filter.text().lower()
@@ -791,62 +843,122 @@ class MainWindow(QMainWindow):
                 self.var_table.setRowHidden(row, text not in item.text().lower())
 
     # ------------------------------------------------------------------
-    # Notifications starten
+    # Aufzeichnung
     # ------------------------------------------------------------------
 
-    def _sync_selection_from_table(self) -> None:
-        for row in range(self.var_table.rowCount()):
-            sym_item = self.var_table.item(row, 0)
-            if sym_item is None:
-                continue
-            symbol = sym_item.text()
-            show = self._get_checkbox_state(row, 4)
-            log = self._get_checkbox_state(row, 5)
-            ai = self._get_checkbox_state(row, 6)
-            self.state_model.set_selection(symbol, show, log, ai)
-
-    def _get_checkbox_state(self, row: int, col: int) -> bool:
-        cell = self.var_table.cellWidget(row, col)
-        if cell is None:
-            return False
-        cb = cell.findChild(QCheckBox)
-        return cb.isChecked() if cb else False
-
-    def _on_apply_selection(self) -> None:
+    def _start_recording(self) -> None:
         if not self.ads_client or not self.ads_client.connected:
             return
+        if self._recording_worker_active or self._recording_status in ("STARTING", "RECORDING", "STOPPING"):
+            return
         self._sync_selection_from_table()
+        selected = [v for v in self.state_model.get_recorded_symbols() if v.supported]
+        if not selected:
+            QMessageBox.information(
+                self, "Keine Auswahl", "Bitte mindestens ein unterstütztes Symbol mit 'Aufzeichnen' auswählen."
+            )
+            return
+        self._recording_generation += 1
+        run_id = self._recording_generation
+        self._recording_status = "STARTING"
+        self._recording_error = ""
+        self._recording_worker_active = True
+        self._update_control_states()
         self.ads_client.stop_all_notifications()
         self._last_values.clear()
-        self._append_sys("Notifications gestoppt. Starte neu...")
-        all_vars = self.state_model.get_all()
-        to_monitor = [
-            v for v in all_vars
-            if (v.show or v.log or v.ai or v.symbol == self._trigger_symbol)
-            and v.supported
-        ]
-        log_syms = [v.symbol for v in to_monitor if v.log]
-        ai_syms = [v.symbol for v in to_monitor if v.ai]
-        self._append_sys(
-            "Loggen: " + str(len(log_syms)) + " Symbole | KI: " + str(len(ai_syms)) + " Symbole"
-        )
+        self._trigger_last_value = None
+        self._append_sys("[AUFZEICHNUNG] Start wird vorbereitet")
 
         def _worker():
-            for vs in to_monitor:
+            failed = []
+            for vs in selected:
+                if run_id != self._recording_generation:
+                    self.signals.status_message.emit(f"__RECORDING_CANCELLED__{run_id}")
+                    return
                 value, ok, err = self.ads_client.read_value(vs.symbol, vs.data_type)
                 if ok:
+                    # Initialwerte sind echte ADS-Werte; der ADS-Client liefert hier
+                    # den Zeitpunkt der UI-Zustellung, nicht einen künstlichen Wert.
                     self.signals.value_updated.emit(vs.symbol, value, datetime.now())
                 else:
+                    failed.append(vs.symbol + ": " + err)
                     self.signals.log_message.emit("[LESEN-FEHLER] " + vs.symbol + ": " + err)
+                    continue
+                if run_id != self._recording_generation:
+                    self.signals.status_message.emit(f"__RECORDING_CANCELLED__{run_id}")
+                    return
                 ok2, err2 = self.ads_client.start_notification(vs.symbol, vs.data_type)
                 if ok2:
                     self.signals.log_message.emit("[NOTIFICATION] " + vs.symbol + " registriert")
                 else:
-                    self.signals.log_message.emit(
-                        "[NOTIFICATION-FEHLER] " + vs.symbol + ": " + err2
-                    )
+                    failed.append(vs.symbol + ": " + err2)
+                    self.signals.log_message.emit("[NOTIFICATION-FEHLER] " + vs.symbol + ": " + err2)
+            self.signals.status_message.emit(
+                f"__RECORDING_DONE__{run_id}" + ("|" + "\n".join(failed) if failed else "")
+            )
 
         threading.Thread(target=_worker, daemon=True).start()
+
+    def _stop_recording(self) -> None:
+        was_active = self._recording_status != "STOPPED" or self._recording_worker_active
+        self._recording_generation += 1
+        if self._recording_worker_active:
+            self._recording_status = "STOPPING"
+        if self.ads_client:
+            self.ads_client.stop_all_notifications()
+        self._recording_status = "STOPPED"
+        self._trigger_armed = False
+        self._trigger_last_value = None
+        if was_active:
+            self.lbl_trigger_status.setText("Aufzeichnung gestoppt")
+            self.lbl_trigger_status.setStyleSheet("color: #666; font-weight: bold;")
+            self._append_sys("[AUFZEICHNUNG] gestoppt; Historie bleibt erhalten")
+        self._update_control_states()
+
+    def _on_recording_worker_status(self, message: str) -> None:
+        if message.startswith("__RECORDING_CANCELLED__"):
+            run_id = int(message[len("__RECORDING_CANCELLED__"):])
+            if run_id == self._recording_generation - 1 or run_id == self._recording_generation:
+                self._recording_worker_active = False
+                self._append_sys("[AUFZEICHNUNG] Start abgebrochen")
+                self._update_control_states()
+            return
+        if not message.startswith("__RECORDING_DONE__"):
+            self.status_bar.showMessage(message)
+            return
+        payload = message[len("__RECORDING_DONE__"):]
+        run_text, separator, details = payload.partition("|")
+        run_id = int(run_text)
+        if run_id != self._recording_generation:
+            return
+        self._recording_worker_active = False
+        if separator:
+            self._recording_status = "ERROR"
+            self._recording_error = details
+            self._append_sys("[AUFZEICHNUNG-FEHLER] " + self._recording_error)
+        else:
+            self._recording_status = "RECORDING"
+            self._append_sys("[AUFZEICHNUNG] läuft")
+        self._update_control_states()
+
+    def _update_control_states(self) -> None:
+        connected = bool(self.ads_client and self.ads_client.connected)
+        has_symbols = self.var_table.rowCount() > 0
+        is_recording = self._recording_status == "RECORDING"
+        is_starting = self._recording_status == "STARTING"
+        self.btn_start_recording.setEnabled(
+            connected and has_symbols and not self._recording_worker_active
+            and self._recording_status not in ("RECORDING", "STARTING", "STOPPING")
+        )
+        self.btn_stop_recording.setEnabled(
+            self._recording_worker_active or is_recording or is_starting
+            or self._recording_status in ("STOPPING", "ERROR")
+        )
+        has_trigger = bool(self.cb_trigger_symbol.currentData())
+        self.btn_trigger_arm.setEnabled(connected and is_recording and has_trigger and not self._trigger_analysis_running)
+        if not self._trigger_armed and has_trigger and is_recording:
+            self.btn_trigger_arm.setText("Trigger scharf schalten")
+            self.btn_trigger_arm.setStyleSheet("background-color: #2e7d32; color: white; font-weight: bold;")
 
     def _ads_value_callback(self, symbol: str, value: object, ts: datetime) -> None:
         self.signals.value_updated.emit(symbol, value, ts)
@@ -856,9 +968,12 @@ class MainWindow(QMainWindow):
             timestamp = ts
         else:
             timestamp = datetime.now()
+        has_previous = symbol in self._last_values
         prev = self._last_values.get(symbol)
-        changed = (prev is None) or (str(prev) != str(value))
+        changed = (not has_previous) or (type(prev) is not type(value)) or (prev != value)
         self._last_values[symbol] = value
+        if self._recording_status not in ("STARTING", "RECORDING"):
+            return
         self.state_model.update_value(symbol, value, timestamp)
         vs = self.state_model.get(symbol)
         if vs is None:
@@ -872,6 +987,7 @@ class MainWindow(QMainWindow):
                 self.lbl_trigger_status.setText("AUSGELÖST - Analyse läuft")
                 self.lbl_trigger_status.setStyleSheet("color: #1565c0; font-weight: bold;")
                 self.btn_trigger_arm.setText("Trigger erneut scharf schalten")
+                self.btn_trigger_arm.setStyleSheet("background-color: #2e7d32; color: white; font-weight: bold;")
                 self._append_sys("[TRIGGER] ausgelöst durch " + symbol)
                 self._pending_trigger_timestamp = timestamp
                 self.lbl_trigger_status.setText("AUSGELÖST - Nachlauf läuft")
@@ -882,9 +998,9 @@ class MainWindow(QMainWindow):
                 )
             self._trigger_last_value = value
 
-        # KI-Daten müssen auch dann historisch aufgezeichnet werden, wenn
-        # der Benutzer nur "KI" und nicht zusätzlich "Loggen" aktiviert hat.
-        if changed and (vs.log or vs.ai or symbol == self._trigger_symbol):
+        # Jede aufgezeichnete Variable ist zugleich Anzeige-, Historie-, KI-
+        # und Notification-Auswahl. Nicht ausgewählte Symbole bleiben außen vor.
+        if changed and vs.recording:
             # Den Zeitstempel aus dem ADS-Callback verwenden. Dadurch bleibt
             # der Trigger-Rueckblick auch bei Qt-Queue-/Thread-Verzoegerungen
             # zeitlich korrekt.
@@ -895,7 +1011,7 @@ class MainWindow(QMainWindow):
                 timestamp=timestamp,
             )
 
-        if changed and vs.log:
+        if changed and vs.recording:
 
             ts_str = timestamp.strftime("%H:%M:%S.%f")[:-3]
             prev_str = str(prev) if prev is not None else "?"
@@ -913,7 +1029,7 @@ class MainWindow(QMainWindow):
         window_to = datetime.now()
         self.lbl_trigger_status.setText("AUSGELÖST - Analyse läuft")
         self.lbl_trigger_status.setStyleSheet("color: #1565c0; font-weight: bold;")
-        ai_vars = self.state_model.get_ai_symbols()
+        ai_vars = self.state_model.get_recorded_symbols()
         history = self.history_model.get_window(
             from_dt=window_from,
             to_dt=window_to,
@@ -941,8 +1057,22 @@ class MainWindow(QMainWindow):
                 "[TRIGGER-WARNUNG] Keine Historieneinträge im Analysefenster. "
                 "Prüfe KI-Auswahl, Auswahl anwenden und Notification-Status."
             )
+        self._set_prompt_preview(
+            system_prompt=system_prompt,
+            user_message=user_message,
+            metadata={
+                "trigger_symbol": self._trigger_symbol or "-",
+                "trigger_timestamp": trigger_ts,
+                "window_from": window_from,
+                "window_to": window_to,
+                "history_count": len(history),
+                "post_seconds": self._trigger_post_seconds,
+            },
+        )
+        self._append_sys("[TRIGGER] Prompt-Vorschau aktualisiert")
         self.te_result.setMarkdown("*Automatische Triggeranalyse läuft ...*")
         self.btn_analyze.setEnabled(False)
+        self._update_control_states()
 
         llm = self.llm_client or LmStudioClient(
             base_url=self.le_llm_url.text().strip() or "http://127.0.0.1:1234/v1",
@@ -971,42 +1101,90 @@ class MainWindow(QMainWindow):
                 continue
             symbol = item.text()
             vs = self.state_model.get(symbol)
-            if vs is None or not vs.show:
+            if vs is None:
                 continue
-            val_item = self.var_table.item(row, 7)
-            if val_item and vs.value is not None:
-                ts_str = vs.timestamp.strftime("%H:%M:%S.%f")[:-3] if vs.timestamp else ""
-                val_item.setText(str(vs.value) + " [" + ts_str + "]")
+            val_item = self.var_table.item(row, 5)
+            if val_item is None:
+                continue
+            if not vs.recording:
+                val_item.setText("-")
+                val_item.setBackground(QColor("#f2f2f2"))
+                val_item.setForeground(QColor("#777777"))
+                continue
+            if not vs.valid or vs.value is None:
+                val_item.setText("(noch nicht gelesen)")
+                val_item.setBackground(QColor("#fff3cd"))
+                val_item.setForeground(QColor("#7a5b00"))
+                continue
+            ts_str = vs.timestamp.strftime("%H:%M:%S.%f")[:-3] if vs.timestamp else "-"
+            val_item.setText(str(vs.value) + " [" + ts_str + "]")
+            val_item.setForeground(QColor("#17212b"))
+            if vs.data_type.upper() == "BOOL" and isinstance(vs.value, bool):
+                if vs.value:
+                    val_item.setBackground(QColor("#b7e4c7"))
+                else:
+                    val_item.setBackground(QColor("#eeeeee"))
+            else:
+                val_item.setBackground(QColor("#ffffff"))
 
     # ------------------------------------------------------------------
     # Prompt-Vorschau
     # ------------------------------------------------------------------
 
+    def _set_prompt_preview(self, system_prompt: str, user_message: str, metadata: Optional[dict] = None) -> None:
+        meta_lines = []
+        if metadata:
+            def fmt(value):
+                return value.isoformat(timespec="milliseconds") if isinstance(value, datetime) else str(value)
+            meta_lines = [
+                "========== ANALYSE-METADATEN ==========",
+                "Trigger-Variable: " + str(metadata.get("trigger_symbol", "-")),
+                "Triggerzeitpunkt: " + fmt(metadata.get("trigger_timestamp", "-")),
+                "Rückblick ab: " + fmt(metadata.get("window_from", "-")),
+                "Analyse bis: " + fmt(metadata.get("window_to", "-")),
+                "Nachlauf: " + str(metadata.get("post_seconds", "-")) + " s",
+                "Verlaufseinträge: " + str(metadata.get("history_count", 0)),
+                "",
+            ]
+            if metadata.get("history_count", 0) == 0:
+                meta_lines += [
+                    "Keine Verlaufsdaten im automatischen Analysefenster.",
+                    "Bitte prüfen:",
+                    "- Aufzeichnung gestartet?",
+                    "- Variablen ausgewählt?",
+                    "- Notifications registriert?",
+                    "- Zeitfenster ausreichend groß?",
+                    "",
+                ]
+        preview = "\n".join(meta_lines) + (
+            "========== SYSTEM-PROMPT ==========\n" + system_prompt
+            + "\n\n========== USER-NACHRICHT (Daten) ==========\n" + user_message
+        )
+        self.te_prompt_preview.setPlainText(preview)
+
     def _update_prompt_preview(self) -> None:
         from_dt = self.dt_from.dateTime().toPython()
         to_dt = self.dt_to.dateTime().toPython()
-        ai_vars = self.state_model.get_ai_symbols()
+        recorded_vars = self.state_model.get_recorded_symbols()
         history = self.history_model.get_window(
             from_dt=from_dt,
             to_dt=to_dt,
-            symbols=[v.symbol for v in ai_vars],
+            symbols=[v.symbol for v in recorded_vars],
         )
         ads_connected = self.ads_client.connected if self.ads_client else False
         system_prompt = self.te_prompt.toPlainText().strip()
         user_message = build_user_message(
-            ai_variables=ai_vars,
+            ai_variables=recorded_vars,
             history=history,
             from_dt=from_dt,
             to_dt=to_dt,
             ads_connected=ads_connected,
         )
-        preview = (
-            "========== SYSTEM-PROMPT ==========\n"
-            + system_prompt
-            + "\n\n========== USER-NACHRICHT (Daten) ==========\n"
-            + user_message
+        self._set_prompt_preview(
+            system_prompt,
+            user_message,
+            {"history_count": len(history), "window_from": from_dt, "window_to": to_dt},
         )
-        self.te_prompt_preview.setPlainText(preview)
 
     # ------------------------------------------------------------------
     # Analyse
@@ -1030,7 +1208,7 @@ class MainWindow(QMainWindow):
         )
         from_dt = self.dt_from.dateTime().toPython()
         to_dt = self.dt_to.dateTime().toPython()
-        ai_vars = self.state_model.get_ai_symbols()
+        ai_vars = self.state_model.get_recorded_symbols()
         history = self.history_model.get_window(
             from_dt=from_dt,
             to_dt=to_dt,
@@ -1134,6 +1312,7 @@ class MainWindow(QMainWindow):
         self._append_sys("[CONFIG] Standardwerte geladen")
 
     def closeEvent(self, event) -> None:
+        self._stop_recording()
         if self.ads_client:
             self.ads_client.disconnect()
         event.accept()

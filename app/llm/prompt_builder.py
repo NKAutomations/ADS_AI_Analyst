@@ -106,12 +106,14 @@ def build_user_message(
         for vs in sorted_vars:
             vid = id_map[vs.symbol]
             val = _fmt_value(vs.value if vs.value is not None else "?", vs.data_type)
-            snapshot_parts.append(f"{vid}={val}")
+            ts = vs.timestamp.isoformat(timespec="milliseconds") if vs.timestamp else "?"
+            snapshot_parts.append(f"{vid}={val}@{ts}")
         lines.append(",".join(snapshot_parts))
     lines.append("")
 
     # --- Zeitreihe ---
     lines.append("=== ZEITREIHE ===")
+    lines.append("Verlaufshistorie: echte ADS-Wertänderungen; keine Simulation.")
 
     if not relevant_history:
         lines.append("# Keine Verlaufsdaten im gewählten Zeitfenster.")

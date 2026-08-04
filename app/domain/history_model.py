@@ -1,15 +1,14 @@
-"""
-history_model.py – In-Memory-Datenhistorie mit Zeitstempel
-"""
+"""Thread-sichere, begrenzte In-Memory-Historie fuer echte ADS-Ereignisse."""
 from __future__ import annotations
+
 import threading
 from collections import deque
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import datetime
 from typing import Deque, List, Optional
 
 
-@dataclass
+@dataclass(frozen=True)
 class HistoryEntry:
     timestamp: datetime
     symbol: str
@@ -18,23 +17,34 @@ class HistoryEntry:
 
 
 class HistoryModel:
-    """Thread-sichere, größenbegrenzte Verlaufshistorie."""
-
     def __init__(self, max_entries: int = 5000) -> None:
-        self._lock = threading.Lock()
-        self._entries: Deque[HistoryEntry] = deque(maxlen=max_entries)
-        self._max_entries = max_entries
+        if max_entries < 1:
+            raise ValueError("max_entries muss groesser als 0 sein")
+        self._lock = threading.RLock()
+        self._max_entries = int(max_entries)
+        self._entries: Deque[HistoryEntry] = deque(maxlen=self._max_entries)
+        self._evicted_total = 0
 
     @property
     def max_entries(self) -> int:
-        return self._max_entries
+        with self._lock:
+            return self._max_entries
 
     @max_entries.setter
     def max_entries(self, value: int) -> None:
+        if value < 1:
+            raise ValueError("max_entries muss groesser als 0 sein")
         with self._lock:
-            self._max_entries = value
-            # Neue deque mit neuem Limit, älteste Einträge fallen weg
-            self._entries = deque(self._entries, maxlen=value)
+            old = list(self._entries)
+            if len(old) > value:
+                self._evicted_total += len(old) - value
+            self._max_entries = int(value)
+            self._entries = deque(old, maxlen=self._max_entries)
+
+    @property
+    def evicted_total(self) -> int:
+        with self._lock:
+            return self._evicted_total
 
     def add(
         self,
@@ -43,13 +53,6 @@ class HistoryModel:
         value: object,
         timestamp: Optional[datetime] = None,
     ) -> None:
-        """Fuegt einen Verlaufseintrag mit ADS-Zeitstempel hinzu.
-
-        Der Callback-Zeitstempel ist wichtig fuer Trigger-Rueckblicke:
-        Die Qt-Signalzustellung kann zeitlich spaeter erfolgen als das
-        eigentliche ADS-Ereignis. Ohne diesen Parameter wuerden Eintraege
-        kuenstlich auf datetime.now() datiert und aus dem Fenster fallen.
-        """
         entry = HistoryEntry(
             timestamp=timestamp or datetime.now(),
             symbol=symbol,
@@ -57,6 +60,8 @@ class HistoryModel:
             value=value,
         )
         with self._lock:
+            if len(self._entries) == self._max_entries:
+                self._evicted_total += 1
             self._entries.append(entry)
 
     def get_window(
@@ -67,13 +72,13 @@ class HistoryModel:
     ) -> List[HistoryEntry]:
         with self._lock:
             result = list(self._entries)
-        if from_dt:
+        if from_dt is not None:
             result = [e for e in result if e.timestamp >= from_dt]
-        if to_dt:
+        if to_dt is not None:
             result = [e for e in result if e.timestamp <= to_dt]
         if symbols is not None:
-            sym_set = set(symbols)
-            result = [e for e in result if e.symbol in sym_set]
+            allowed = set(symbols)
+            result = [e for e in result if e.symbol in allowed]
         return result
 
     def clear(self) -> None:
