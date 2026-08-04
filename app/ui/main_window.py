@@ -31,6 +31,7 @@ from PySide6.QtWidgets import (
     QMessageBox,
     QDoubleSpinBox,
     QPlainTextEdit,
+    QTextBrowser,
     QPushButton,
     QSizePolicy,
     QSpinBox,
@@ -413,9 +414,22 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.lbl_last_analysis)
 
         layout.addWidget(QLabel("KI-Antwort:"))
-        self.te_result = QPlainTextEdit()
+        self.te_result = QTextBrowser()
+        self.te_result.setOpenExternalLinks(False)
+        self.te_result.setOpenLinks(False)
         self.te_result.setReadOnly(True)
         self.te_result.setPlaceholderText("Hier erscheint die KI-Analyse...")
+        self.te_result.setStyleSheet(
+            """
+            QTextBrowser {
+                background: #fbfcfe;
+                border: 1px solid #b8c2cc;
+                border-radius: 4px;
+                padding: 8px;
+                color: #17212b;
+            }
+            """
+        )
         layout.addWidget(self.te_result)
 
         return box
@@ -843,7 +857,7 @@ class MainWindow(QMainWindow):
             + str(len(history))
         )
         self.btn_analyze.setEnabled(False)
-        self.te_result.setPlainText("Analyse laeuft...")
+        self.te_result.setMarkdown("*Analyse läuft ...*")
 
         def _worker():
             answer, ok = self.llm_client.analyze(system_prompt, user_message)
@@ -853,7 +867,12 @@ class MainWindow(QMainWindow):
 
     def _on_analysis_result(self, answer: str, ok: bool) -> None:
         self.btn_analyze.setEnabled(True)
-        self.te_result.setPlainText(answer)
+        if ok and answer.strip():
+            self.te_result.setMarkdown(answer)
+        else:
+            self.te_result.setMarkdown(
+                "### Analyse konnte nicht dargestellt werden\\n\\n" + answer
+            )
         ts = datetime.now().strftime("%d.%m.%Y %H:%M:%S.%f")[:-3]
         self.lbl_last_analysis.setText("Letzte Analyse: " + ts)
         if ok:

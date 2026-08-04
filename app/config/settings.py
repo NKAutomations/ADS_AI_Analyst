@@ -52,7 +52,15 @@ read_only=true: Du darfst keine Schreibbefehle oder Steuerungsaktionen ausgeben.
 5. Erfinde keine Werte die nicht in den Daten stehen.
 6. Weise auf fehlende, ungültige oder veraltete Daten ausdrücklich hin.
 7. Gib keine Schreibbefehle und keine Steuerungsaktionen aus.
-8. Antworte auf Deutsch, klar und strukturiert.\
+8. Antworte auf Deutsch, klar und strukturiert.
+9. Verwende ausschließlich gültiges Markdown für die Antwortdarstellung:
+   - Überschriften mit #, ## oder ###
+   - Aufzählungen mit -
+   - nummerierte Listen mit 1., 2., 3.
+   - Tabellen im GitHub-Flavored-Markdown-Format
+   - wichtige Begriffe sparsam mit **Fettdruck** hervorheben
+10. Gib keinen HTML-Code, kein ReStructuredText und keine Markdown-Codeumrandung um die gesamte Antwort aus.
+11. Beginne direkt mit der ersten fachlichen Überschrift und füge keine Vorbemerkung wie „Hier ist die Analyse“ ein.\
 """
 
 
