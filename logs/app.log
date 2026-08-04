@@ -831,3 +831,435 @@ Geraet: TCatPlcCtrl | ADS-State: 5
 2026-08-04 14:56:50,079 [INFO] httpx: HTTP Request: POST http://127.0.0.1:1234/v1/chat/completions "HTTP/1.1 200 OK"
 2026-08-04 14:56:50,079 [INFO] app.llm.lm_studio_client: LLM-Antwort empfangen (105 Zeichen)
 2026-08-04 14:56:50,081 [INFO] app.ui.main_window: [LLM] Antwort empfangen (105 Zeichen)
+2026-08-04 14:59:26,062 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELERROR: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 14:59:26,062 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELGELB: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 14:59:26,125 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELGRUEN: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 14:59:26,126 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELQUITERROR: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 14:59:26,126 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELROT: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 14:59:26,126 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BNOTAUS: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 14:59:26,126 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BSICHERUNGF1: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 14:59:26,126 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BSICHERUNGF2: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 14:59:26,127 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BSICHERUNGF3: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 14:59:26,127 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification MAIN.ISTEP: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 14:59:26,128 [INFO] app.ui.main_window: [AUFZEICHNUNG] gestoppt; Historie bleibt erhalten
+2026-08-04 14:59:27,353 [INFO] app.ui.main_window: [AUFZEICHNUNG] Start wird vorbereitet
+2026-08-04 14:59:27,491 [INFO] app.ads.ads_client: Notification registriert: .BAMPELERROR (Handle 575)
+2026-08-04 14:59:27,494 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELERROR registriert
+2026-08-04 14:59:27,611 [INFO] app.ads.ads_client: Notification registriert: .BAMPELGELB (Handle 576)
+2026-08-04 14:59:27,613 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELGELB registriert
+2026-08-04 14:59:27,809 [INFO] app.ads.ads_client: Notification registriert: .BAMPELGRUEN (Handle 577)
+2026-08-04 14:59:27,812 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELGRUEN registriert
+2026-08-04 14:59:27,954 [INFO] app.ads.ads_client: Notification registriert: .BAMPELQUITERROR (Handle 578)
+2026-08-04 14:59:27,955 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELQUITERROR registriert
+2026-08-04 14:59:28,114 [INFO] app.ads.ads_client: Notification registriert: .BAMPELROT (Handle 579)
+2026-08-04 14:59:28,117 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELROT registriert
+2026-08-04 14:59:28,322 [INFO] app.ads.ads_client: Notification registriert: .BNOTAUS (Handle 580)
+2026-08-04 14:59:28,324 [INFO] app.ui.main_window: [NOTIFICATION] .BNOTAUS registriert
+2026-08-04 14:59:28,508 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF1 (Handle 581)
+2026-08-04 14:59:28,509 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF1 registriert
+2026-08-04 14:59:28,616 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELERROR: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 14:59:28,617 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELGELB: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 14:59:28,617 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELGRUEN: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 14:59:28,618 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELQUITERROR: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 14:59:28,618 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELROT: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 14:59:28,618 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BNOTAUS: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 14:59:28,618 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BSICHERUNGF1: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 14:59:28,618 [INFO] app.ui.main_window: [AUFZEICHNUNG] gestoppt; Historie bleibt erhalten
+2026-08-04 14:59:28,619 [INFO] app.ui.main_window: [AUFZEICHNUNG] Start abgebrochen
+2026-08-04 14:59:36,166 [INFO] app.ui.main_window: [AUFZEICHNUNG] Start wird vorbereitet
+2026-08-04 14:59:36,385 [INFO] app.ads.ads_client: Notification registriert: .BAMPELERROR (Handle 582)
+2026-08-04 14:59:36,388 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELERROR registriert
+2026-08-04 14:59:36,543 [INFO] app.ads.ads_client: Notification registriert: .BAMPELGELB (Handle 583)
+2026-08-04 14:59:36,545 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELGELB registriert
+2026-08-04 14:59:36,689 [INFO] app.ads.ads_client: Notification registriert: .BAMPELGRUEN (Handle 584)
+2026-08-04 14:59:36,691 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELGRUEN registriert
+2026-08-04 14:59:36,844 [INFO] app.ads.ads_client: Notification registriert: .BAMPELQUITERROR (Handle 585)
+2026-08-04 14:59:36,846 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELQUITERROR registriert
+2026-08-04 14:59:37,009 [INFO] app.ads.ads_client: Notification registriert: .BAMPELROT (Handle 586)
+2026-08-04 14:59:37,011 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELROT registriert
+2026-08-04 14:59:37,204 [INFO] app.ads.ads_client: Notification registriert: .BNOTAUS (Handle 587)
+2026-08-04 14:59:37,206 [INFO] app.ui.main_window: [NOTIFICATION] .BNOTAUS registriert
+2026-08-04 14:59:37,405 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF1 (Handle 588)
+2026-08-04 14:59:37,407 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF1 registriert
+2026-08-04 14:59:37,564 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF2 (Handle 589)
+2026-08-04 14:59:37,566 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF2 registriert
+2026-08-04 14:59:37,704 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF3 (Handle 590)
+2026-08-04 14:59:37,706 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF3 registriert
+2026-08-04 14:59:37,780 [INFO] app.ads.ads_client: Notification registriert: MAIN.ISTEP (Handle 591)
+2026-08-04 14:59:37,781 [INFO] app.ui.main_window: [NOTIFICATION] MAIN.ISTEP registriert
+2026-08-04 14:59:37,782 [INFO] app.ui.main_window: [AUFZEICHNUNG] läuft
+2026-08-04 14:59:38,115 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELERROR: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 14:59:38,115 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELGELB: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 14:59:38,116 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELGRUEN: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 14:59:38,116 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELQUITERROR: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 14:59:38,116 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELROT: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 14:59:38,116 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BNOTAUS: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 14:59:38,117 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BSICHERUNGF1: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 14:59:38,117 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BSICHERUNGF2: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 14:59:38,117 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BSICHERUNGF3: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 14:59:38,117 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification MAIN.ISTEP: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 14:59:38,117 [INFO] app.ui.main_window: [AUFZEICHNUNG] gestoppt; Historie bleibt erhalten
+2026-08-04 14:59:39,406 [INFO] app.ui.main_window: [AUFZEICHNUNG] Start wird vorbereitet
+2026-08-04 14:59:39,546 [INFO] app.ads.ads_client: Notification registriert: .BAMPELERROR (Handle 592)
+2026-08-04 14:59:39,547 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELERROR registriert
+2026-08-04 14:59:39,736 [INFO] app.ads.ads_client: Notification registriert: .BAMPELGELB (Handle 593)
+2026-08-04 14:59:39,739 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELGELB registriert
+2026-08-04 14:59:39,892 [INFO] app.ads.ads_client: Notification registriert: .BAMPELGRUEN (Handle 594)
+2026-08-04 14:59:39,894 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELGRUEN registriert
+2026-08-04 14:59:40,024 [INFO] app.ads.ads_client: Notification registriert: .BAMPELQUITERROR (Handle 595)
+2026-08-04 14:59:40,027 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELQUITERROR registriert
+2026-08-04 14:59:40,100 [INFO] app.ads.ads_client: Notification registriert: .BAMPELROT (Handle 596)
+2026-08-04 14:59:40,102 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELROT registriert
+2026-08-04 14:59:40,288 [INFO] app.ads.ads_client: Notification registriert: .BNOTAUS (Handle 597)
+2026-08-04 14:59:40,291 [INFO] app.ui.main_window: [NOTIFICATION] .BNOTAUS registriert
+2026-08-04 14:59:40,427 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF1 (Handle 598)
+2026-08-04 14:59:40,430 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF1 registriert
+2026-08-04 14:59:40,537 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF2 (Handle 599)
+2026-08-04 14:59:40,539 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF2 registriert
+2026-08-04 14:59:40,652 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF3 (Handle 600)
+2026-08-04 14:59:40,654 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF3 registriert
+2026-08-04 14:59:40,766 [INFO] app.ads.ads_client: Notification registriert: MAIN.ISTEP (Handle 601)
+2026-08-04 14:59:40,768 [INFO] app.ui.main_window: [NOTIFICATION] MAIN.ISTEP registriert
+2026-08-04 14:59:40,769 [INFO] app.ui.main_window: [AUFZEICHNUNG] läuft
+2026-08-04 14:59:56,115 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELERROR: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 14:59:56,116 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELGELB: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 14:59:56,117 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELGRUEN: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 14:59:56,117 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELQUITERROR: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 14:59:56,117 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELROT: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 14:59:56,117 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BNOTAUS: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 14:59:56,117 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BSICHERUNGF1: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 14:59:56,117 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BSICHERUNGF2: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 14:59:56,118 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BSICHERUNGF3: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 14:59:56,118 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification MAIN.ISTEP: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 14:59:56,118 [INFO] app.ui.main_window: [AUFZEICHNUNG] gestoppt; Historie bleibt erhalten
+2026-08-04 15:01:04,224 [INFO] app.ui.main_window: [AUFZEICHNUNG] Start wird vorbereitet
+2026-08-04 15:01:04,388 [INFO] app.ads.ads_client: Notification registriert: .BAMPELERROR (Handle 602)
+2026-08-04 15:01:04,389 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELERROR registriert
+2026-08-04 15:01:04,540 [INFO] app.ads.ads_client: Notification registriert: .BAMPELGELB (Handle 603)
+2026-08-04 15:01:04,541 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELGELB registriert
+2026-08-04 15:01:04,630 [INFO] app.ads.ads_client: Notification registriert: .BAMPELGRUEN (Handle 604)
+2026-08-04 15:01:04,634 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELGRUEN registriert
+2026-08-04 15:01:04,800 [INFO] app.ads.ads_client: Notification registriert: .BAMPELQUITERROR (Handle 605)
+2026-08-04 15:01:04,801 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELQUITERROR registriert
+2026-08-04 15:01:04,908 [INFO] app.ads.ads_client: Notification registriert: .BAMPELROT (Handle 606)
+2026-08-04 15:01:04,910 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELROT registriert
+2026-08-04 15:01:05,000 [INFO] app.ads.ads_client: Notification registriert: .BNOTAUS (Handle 607)
+2026-08-04 15:01:05,001 [INFO] app.ui.main_window: [NOTIFICATION] .BNOTAUS registriert
+2026-08-04 15:01:05,100 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF1 (Handle 608)
+2026-08-04 15:01:05,101 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF1 registriert
+2026-08-04 15:01:05,196 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF2 (Handle 609)
+2026-08-04 15:01:05,198 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF2 registriert
+2026-08-04 15:01:05,290 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF3 (Handle 610)
+2026-08-04 15:01:05,292 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF3 registriert
+2026-08-04 15:01:05,370 [INFO] app.ads.ads_client: Notification registriert: MAIN.ISTEP (Handle 611)
+2026-08-04 15:01:05,371 [INFO] app.ui.main_window: [NOTIFICATION] MAIN.ISTEP registriert
+2026-08-04 15:01:05,372 [INFO] app.ui.main_window: [AUFZEICHNUNG] läuft
+2026-08-04 15:01:05,491 [INFO] app.ui.main_window: [TRIGGER] scharf: .BAMPELERROR | Flanke=rising | Rückblick=300 s | Nachlauf=10 s
+2026-08-04 15:01:07,605 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELERROR: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:01:07,606 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELGELB: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:01:07,606 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELGRUEN: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:01:07,606 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELQUITERROR: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:01:07,607 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELROT: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:01:07,607 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BNOTAUS: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:01:07,607 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BSICHERUNGF1: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:01:07,607 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BSICHERUNGF2: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:01:07,608 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BSICHERUNGF3: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:01:07,608 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification MAIN.ISTEP: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:01:07,608 [INFO] app.ui.main_window: [AUFZEICHNUNG] gestoppt; Historie bleibt erhalten
+2026-08-04 15:01:11,636 [INFO] app.ui.main_window: [AUFZEICHNUNG] Start wird vorbereitet
+2026-08-04 15:01:11,746 [INFO] app.ads.ads_client: Notification registriert: .BAMPELERROR (Handle 612)
+2026-08-04 15:01:11,747 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELERROR registriert
+2026-08-04 15:01:11,832 [INFO] app.ads.ads_client: Notification registriert: .BAMPELGELB (Handle 613)
+2026-08-04 15:01:11,833 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELGELB registriert
+2026-08-04 15:01:11,912 [INFO] app.ads.ads_client: Notification registriert: .BAMPELGRUEN (Handle 614)
+2026-08-04 15:01:11,912 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELGRUEN registriert
+2026-08-04 15:01:11,997 [INFO] app.ads.ads_client: Notification registriert: .BAMPELQUITERROR (Handle 615)
+2026-08-04 15:01:11,999 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELQUITERROR registriert
+2026-08-04 15:01:12,093 [INFO] app.ads.ads_client: Notification registriert: .BAMPELROT (Handle 616)
+2026-08-04 15:01:12,094 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELROT registriert
+2026-08-04 15:01:12,173 [INFO] app.ads.ads_client: Notification registriert: .BNOTAUS (Handle 617)
+2026-08-04 15:01:12,174 [INFO] app.ui.main_window: [NOTIFICATION] .BNOTAUS registriert
+2026-08-04 15:01:12,247 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF1 (Handle 618)
+2026-08-04 15:01:12,248 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF1 registriert
+2026-08-04 15:01:12,327 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF2 (Handle 619)
+2026-08-04 15:01:12,328 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF2 registriert
+2026-08-04 15:01:12,467 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF3 (Handle 620)
+2026-08-04 15:01:12,468 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF3 registriert
+2026-08-04 15:01:12,567 [INFO] app.ads.ads_client: Notification registriert: MAIN.ISTEP (Handle 621)
+2026-08-04 15:01:12,568 [INFO] app.ui.main_window: [NOTIFICATION] MAIN.ISTEP registriert
+2026-08-04 15:01:12,569 [INFO] app.ui.main_window: [AUFZEICHNUNG] läuft
+2026-08-04 15:01:15,977 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELERROR: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:01:15,977 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELGELB: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:01:15,978 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELGRUEN: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:01:15,978 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELQUITERROR: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:01:15,978 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELROT: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:01:15,978 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BNOTAUS: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:01:15,978 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BSICHERUNGF1: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:01:15,978 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BSICHERUNGF2: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:01:15,979 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BSICHERUNGF3: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:01:15,979 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification MAIN.ISTEP: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:01:15,979 [INFO] app.ui.main_window: [AUFZEICHNUNG] gestoppt; Historie bleibt erhalten
+2026-08-04 15:01:19,914 [INFO] app.ui.main_window: [AUFZEICHNUNG] Start wird vorbereitet
+2026-08-04 15:01:20,026 [INFO] app.ads.ads_client: Notification registriert: .BAMPELERROR (Handle 622)
+2026-08-04 15:01:20,026 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELERROR registriert
+2026-08-04 15:01:20,124 [INFO] app.ads.ads_client: Notification registriert: .BAMPELGELB (Handle 623)
+2026-08-04 15:01:20,124 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELGELB registriert
+2026-08-04 15:01:20,254 [INFO] app.ads.ads_client: Notification registriert: .BAMPELGRUEN (Handle 624)
+2026-08-04 15:01:20,255 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELGRUEN registriert
+2026-08-04 15:01:20,365 [INFO] app.ads.ads_client: Notification registriert: .BAMPELQUITERROR (Handle 625)
+2026-08-04 15:01:20,366 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELQUITERROR registriert
+2026-08-04 15:01:20,464 [INFO] app.ads.ads_client: Notification registriert: .BAMPELROT (Handle 626)
+2026-08-04 15:01:20,465 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELROT registriert
+2026-08-04 15:01:20,540 [INFO] app.ads.ads_client: Notification registriert: .BNOTAUS (Handle 627)
+2026-08-04 15:01:20,540 [INFO] app.ui.main_window: [NOTIFICATION] .BNOTAUS registriert
+2026-08-04 15:01:20,632 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF1 (Handle 628)
+2026-08-04 15:01:20,632 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF1 registriert
+2026-08-04 15:01:20,724 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF2 (Handle 629)
+2026-08-04 15:01:20,724 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF2 registriert
+2026-08-04 15:01:20,824 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF3 (Handle 630)
+2026-08-04 15:01:20,825 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF3 registriert
+2026-08-04 15:01:20,884 [INFO] app.ads.ads_client: Notification registriert: MAIN.ISTEP (Handle 631)
+2026-08-04 15:01:20,885 [INFO] app.ui.main_window: [NOTIFICATION] MAIN.ISTEP registriert
+2026-08-04 15:01:20,885 [INFO] app.ui.main_window: [AUFZEICHNUNG] läuft
+2026-08-04 15:01:21,211 [INFO] app.ui.main_window: [TRIGGER] scharf: .BAMPELERROR | Flanke=rising | Rückblick=300 s | Nachlauf=10 s
+2026-08-04 15:01:23,258 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELERROR: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:01:23,258 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELGELB: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:01:23,264 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELGRUEN: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:01:23,265 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELQUITERROR: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:01:23,265 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELROT: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:01:23,265 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BNOTAUS: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:01:23,265 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BSICHERUNGF1: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:01:23,265 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BSICHERUNGF2: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:01:23,265 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BSICHERUNGF3: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:01:23,266 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification MAIN.ISTEP: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:01:23,266 [INFO] app.ui.main_window: [AUFZEICHNUNG] gestoppt; Historie bleibt erhalten
+2026-08-04 15:01:24,916 [INFO] app.ui.main_window: [AUFZEICHNUNG] Start wird vorbereitet
+2026-08-04 15:01:25,037 [INFO] app.ads.ads_client: Notification registriert: .BAMPELERROR (Handle 632)
+2026-08-04 15:01:25,040 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELERROR registriert
+2026-08-04 15:01:25,128 [INFO] app.ads.ads_client: Notification registriert: .BAMPELGELB (Handle 633)
+2026-08-04 15:01:25,129 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELGELB registriert
+2026-08-04 15:01:25,173 [INFO] app.ads.ads_client: Notification registriert: .BAMPELGRUEN (Handle 634)
+2026-08-04 15:01:25,174 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELGRUEN registriert
+2026-08-04 15:01:25,227 [INFO] app.ads.ads_client: Notification registriert: .BAMPELQUITERROR (Handle 635)
+2026-08-04 15:01:25,228 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELQUITERROR registriert
+2026-08-04 15:01:25,298 [INFO] app.ads.ads_client: Notification registriert: .BAMPELROT (Handle 636)
+2026-08-04 15:01:25,299 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELROT registriert
+2026-08-04 15:01:25,358 [INFO] app.ads.ads_client: Notification registriert: .BNOTAUS (Handle 637)
+2026-08-04 15:01:25,359 [INFO] app.ui.main_window: [NOTIFICATION] .BNOTAUS registriert
+2026-08-04 15:01:25,468 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF1 (Handle 638)
+2026-08-04 15:01:25,470 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF1 registriert
+2026-08-04 15:01:25,530 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF2 (Handle 639)
+2026-08-04 15:01:25,530 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF2 registriert
+2026-08-04 15:01:25,608 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF3 (Handle 640)
+2026-08-04 15:01:25,609 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF3 registriert
+2026-08-04 15:01:25,675 [INFO] app.ads.ads_client: Notification registriert: MAIN.ISTEP (Handle 641)
+2026-08-04 15:01:25,676 [INFO] app.ui.main_window: [NOTIFICATION] MAIN.ISTEP registriert
+2026-08-04 15:01:25,676 [INFO] app.ui.main_window: [AUFZEICHNUNG] läuft
+2026-08-04 15:01:27,752 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELERROR: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:01:27,752 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELGELB: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:01:27,753 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELGRUEN: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:01:27,753 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELQUITERROR: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:01:27,753 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELROT: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:01:27,754 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BNOTAUS: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:01:27,754 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BSICHERUNGF1: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:01:27,754 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BSICHERUNGF2: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:01:27,754 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BSICHERUNGF3: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:01:27,754 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification MAIN.ISTEP: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:01:27,755 [INFO] app.ui.main_window: [AUFZEICHNUNG] gestoppt; Historie bleibt erhalten
+2026-08-04 15:14:12,206 [INFO] app.ads.ads_client: ADS-Verbindung getrennt
+2026-08-04 15:14:57,421 [INFO] __main__: ADS_KI_Analyse wird gestartet
+2026-08-04 15:14:59,044 [INFO] app.ui.main_window: Verbindungsversuch: 10.12.57.1 / 10.12.13.236.1.1 / Port 801
+2026-08-04 15:14:59,083 [INFO] app.ads.ads_client: ADS verifiziert: Geraet=TCatPlcCtrl ADS-State=5
+2026-08-04 15:14:59,084 [INFO] app.ui.main_window: [VERBUNDEN] ADS verifiziert - echte Runtime
+Geraet: TCatPlcCtrl | ADS-State: 5
+2026-08-04 15:14:59,085 [INFO] app.config.settings: Konfiguration gespeichert: C:\TOOLS\PhytonProjekte\ADS_KI_Analyse\config\config.json
+2026-08-04 15:15:01,496 [INFO] app.ui.main_window: Lade alle ADS-Symbole...
+2026-08-04 15:15:01,516 [INFO] app.ads.ads_client: 107 Symbole gelesen
+2026-08-04 15:15:01,593 [INFO] app.ui.main_window: 107 Symbole geladen.
+2026-08-04 15:15:09,675 [INFO] app.config.settings: Konfiguration gespeichert: C:\TOOLS\PhytonProjekte\ADS_KI_Analyse\config\config.json
+2026-08-04 15:15:09,676 [INFO] app.ui.main_window: [CONFIG] Einstellungen gespeichert
+2026-08-04 15:15:26,187 [INFO] app.ui.main_window: [AUFZEICHNUNG] Start wird vorbereitet
+2026-08-04 15:15:26,219 [INFO] app.ads.ads_client: Notification registriert: .BAMPELERROR (Handle 642)
+2026-08-04 15:15:26,220 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELERROR registriert
+2026-08-04 15:15:26,371 [INFO] app.ads.ads_client: Notification registriert: .BAMPELGELB (Handle 643)
+2026-08-04 15:15:26,372 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELGELB registriert
+2026-08-04 15:15:26,522 [INFO] app.ads.ads_client: Notification registriert: .BAMPELGRUEN (Handle 644)
+2026-08-04 15:15:26,524 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELGRUEN registriert
+2026-08-04 15:15:26,720 [INFO] app.ads.ads_client: Notification registriert: .BAMPELQUITERROR (Handle 645)
+2026-08-04 15:15:26,723 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELQUITERROR registriert
+2026-08-04 15:15:26,928 [INFO] app.ads.ads_client: Notification registriert: .BAMPELROT (Handle 646)
+2026-08-04 15:15:26,938 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELROT registriert
+2026-08-04 15:15:27,075 [INFO] app.ads.ads_client: Notification registriert: .BNOTAUS (Handle 647)
+2026-08-04 15:15:27,076 [INFO] app.ui.main_window: [NOTIFICATION] .BNOTAUS registriert
+2026-08-04 15:15:27,266 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF1 (Handle 648)
+2026-08-04 15:15:27,267 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF1 registriert
+2026-08-04 15:15:27,434 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF2 (Handle 649)
+2026-08-04 15:15:27,435 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF2 registriert
+2026-08-04 15:15:27,634 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF3 (Handle 650)
+2026-08-04 15:15:27,635 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF3 registriert
+2026-08-04 15:15:27,833 [INFO] app.ads.ads_client: Notification registriert: MAIN.ISTEP (Handle 651)
+2026-08-04 15:15:27,834 [INFO] app.ui.main_window: [NOTIFICATION] MAIN.ISTEP registriert
+2026-08-04 15:15:27,836 [INFO] app.ui.main_window: [AUFZEICHNUNG] läuft
+2026-08-04 15:16:06,282 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELERROR: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:16:06,282 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELGELB: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:16:06,283 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELGRUEN: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:16:06,283 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELQUITERROR: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:16:06,283 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELROT: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:16:06,284 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BNOTAUS: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:16:06,284 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BSICHERUNGF1: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:16:06,284 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BSICHERUNGF2: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:16:06,284 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BSICHERUNGF3: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:16:06,285 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification MAIN.ISTEP: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:16:06,285 [INFO] app.ui.main_window: [AUFZEICHNUNG] gestoppt; Historie bleibt erhalten
+2026-08-04 15:16:15,748 [INFO] app.ui.main_window: [AUFZEICHNUNG] Start wird vorbereitet
+2026-08-04 15:16:15,938 [INFO] app.ads.ads_client: Notification registriert: .BAMPELERROR (Handle 652)
+2026-08-04 15:16:15,939 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELERROR registriert
+2026-08-04 15:16:16,081 [INFO] app.ads.ads_client: Notification registriert: .BAMPELGELB (Handle 653)
+2026-08-04 15:16:16,083 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELGELB registriert
+2026-08-04 15:16:16,231 [INFO] app.ads.ads_client: Notification registriert: .BAMPELGRUEN (Handle 654)
+2026-08-04 15:16:16,236 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELGRUEN registriert
+2026-08-04 15:16:16,429 [INFO] app.ads.ads_client: Notification registriert: .BAMPELQUITERROR (Handle 655)
+2026-08-04 15:16:16,438 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELQUITERROR registriert
+2026-08-04 15:16:16,603 [INFO] app.ads.ads_client: Notification registriert: .BAMPELROT (Handle 656)
+2026-08-04 15:16:16,604 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELROT registriert
+2026-08-04 15:16:16,692 [INFO] app.ads.ads_client: Notification registriert: .BNOTAUS (Handle 657)
+2026-08-04 15:16:16,693 [INFO] app.ui.main_window: [NOTIFICATION] .BNOTAUS registriert
+2026-08-04 15:16:16,841 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF1 (Handle 658)
+2026-08-04 15:16:16,843 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF1 registriert
+2026-08-04 15:16:16,999 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF2 (Handle 659)
+2026-08-04 15:16:17,001 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF2 registriert
+2026-08-04 15:16:17,151 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF3 (Handle 660)
+2026-08-04 15:16:17,153 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF3 registriert
+2026-08-04 15:16:17,298 [INFO] app.ads.ads_client: Notification registriert: MAIN.ISTEP (Handle 661)
+2026-08-04 15:16:17,301 [INFO] app.ui.main_window: [NOTIFICATION] MAIN.ISTEP registriert
+2026-08-04 15:16:17,305 [INFO] app.ui.main_window: [AUFZEICHNUNG] läuft
+2026-08-04 15:16:33,611 [INFO] app.ui.main_window: [TRIGGER] scharf: .BAMPELERROR | Flanke=rising | Rückblick=120 s | Nachlauf=10 s
+2026-08-04 15:16:56,369 [INFO] app.ui.main_window: [TRIGGER] ausgelöst durch .BAMPELERROR
+2026-08-04 15:17:06,362 [INFO] app.ui.main_window: [TRIGGER] Snapshot erstellt | Historie: 100 Einträge | Symbole: .BAMPELERROR, .BAMPELGELB, .BAMPELGRUEN, .BAMPELQUITERROR, .BAMPELROT, .BNOTAUS, .BSICHERUNGF1, .BSICHERUNGF2, .BSICHERUNGF3, MAIN.ISTEP | Zeitraum: 15:14:56.368 bis 15:17:06.358 | Notifications bleiben aktiv
+2026-08-04 15:17:06,363 [INFO] app.ui.main_window: [TRIGGER] Prompt-Vorschau aktualisiert
+2026-08-04 15:17:06,451 [INFO] app.llm.lm_studio_client: LLM-Anfrage an http://127.0.0.1:1234/v1/chat/completions (Modell: local-model)
+2026-08-04 15:17:19,944 [INFO] httpx: HTTP Request: POST http://127.0.0.1:1234/v1/chat/completions "HTTP/1.1 200 OK"
+2026-08-04 15:17:19,944 [INFO] app.llm.lm_studio_client: LLM-Antwort empfangen (995 Zeichen)
+2026-08-04 15:17:19,948 [INFO] app.ui.main_window: [LLM] Antwort empfangen (995 Zeichen)
+2026-08-04 15:18:39,312 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELERROR: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:18:39,312 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELGELB: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:18:39,313 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELGRUEN: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:18:39,313 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELQUITERROR: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:18:39,313 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELROT: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:18:39,314 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BNOTAUS: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:18:39,314 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BSICHERUNGF1: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:18:39,314 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BSICHERUNGF2: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:18:39,314 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BSICHERUNGF3: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:18:39,314 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification MAIN.ISTEP: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:18:39,315 [INFO] app.ui.main_window: [AUFZEICHNUNG] gestoppt; Historie bleibt erhalten
+2026-08-04 15:23:54,192 [INFO] app.ads.ads_client: ADS-Verbindung getrennt
+2026-08-04 15:25:26,150 [INFO] __main__: ADS_KI_Analyse wird gestartet
+2026-08-04 15:25:28,432 [INFO] app.ui.main_window: Verbindungsversuch: 10.12.57.1 / 10.12.13.236.1.1 / Port 801
+2026-08-04 15:25:28,475 [INFO] app.ads.ads_client: ADS verifiziert: Geraet=TCatPlcCtrl ADS-State=5
+2026-08-04 15:25:28,475 [INFO] app.ui.main_window: [VERBUNDEN] ADS verifiziert - echte Runtime
+Geraet: TCatPlcCtrl | ADS-State: 5
+2026-08-04 15:25:28,476 [INFO] app.config.settings: Konfiguration gespeichert: C:\TOOLS\PhytonProjekte\ADS_KI_Analyse\config\config.json
+2026-08-04 15:25:29,783 [INFO] app.ui.main_window: Lade alle ADS-Symbole...
+2026-08-04 15:25:29,804 [INFO] app.ads.ads_client: 107 Symbole gelesen
+2026-08-04 15:25:29,874 [INFO] app.ui.main_window: 107 Symbole geladen.
+2026-08-04 15:25:55,878 [INFO] app.ui.main_window: [AUFZEICHNUNG] Start wird vorbereitet
+2026-08-04 15:25:55,914 [INFO] app.ads.ads_client: Notification registriert: .BAMPELERROR (Handle 662)
+2026-08-04 15:25:55,915 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELERROR registriert
+2026-08-04 15:25:56,113 [INFO] app.ads.ads_client: Notification registriert: .BAMPELGELB (Handle 663)
+2026-08-04 15:25:56,114 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELGELB registriert
+2026-08-04 15:25:56,271 [INFO] app.ads.ads_client: Notification registriert: .BAMPELGRUEN (Handle 664)
+2026-08-04 15:25:56,273 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELGRUEN registriert
+2026-08-04 15:25:56,413 [INFO] app.ads.ads_client: Notification registriert: .BAMPELQUITERROR (Handle 665)
+2026-08-04 15:25:56,415 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELQUITERROR registriert
+2026-08-04 15:25:56,573 [INFO] app.ads.ads_client: Notification registriert: .BAMPELROT (Handle 666)
+2026-08-04 15:25:56,574 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELROT registriert
+2026-08-04 15:25:56,761 [INFO] app.ads.ads_client: Notification registriert: .BAMPELSTART (Handle 667)
+2026-08-04 15:25:56,763 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELSTART registriert
+2026-08-04 15:25:56,964 [INFO] app.ads.ads_client: Notification registriert: .BAMPELSTOP (Handle 668)
+2026-08-04 15:25:56,966 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELSTOP registriert
+2026-08-04 15:25:57,134 [INFO] app.ads.ads_client: Notification registriert: .BNOTAUS (Handle 669)
+2026-08-04 15:25:57,135 [INFO] app.ui.main_window: [NOTIFICATION] .BNOTAUS registriert
+2026-08-04 15:25:57,276 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF1 (Handle 670)
+2026-08-04 15:25:57,278 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF1 registriert
+2026-08-04 15:25:57,432 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF2 (Handle 671)
+2026-08-04 15:25:57,434 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF2 registriert
+2026-08-04 15:25:57,579 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF3 (Handle 672)
+2026-08-04 15:25:57,580 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF3 registriert
+2026-08-04 15:25:57,736 [INFO] app.ads.ads_client: Notification registriert: MAIN.ISTEP (Handle 673)
+2026-08-04 15:25:57,737 [INFO] app.ui.main_window: [NOTIFICATION] MAIN.ISTEP registriert
+2026-08-04 15:25:57,737 [INFO] app.ui.main_window: [AUFZEICHNUNG] läuft
+2026-08-04 15:27:07,038 [INFO] app.ui.main_window: [TRIGGER] scharf: .BAMPELERROR | Flanke=rising | Rückblick=120 s | Nachlauf=10 s
+2026-08-04 15:27:30,837 [INFO] app.ui.main_window: [TRIGGER] manuell gestoppt
+2026-08-04 15:27:31,540 [INFO] app.ui.main_window: [TRIGGER] scharf: .BAMPELERROR | Flanke=rising | Rückblick=120 s | Nachlauf=10 s
+2026-08-04 15:28:46,342 [INFO] app.ui.main_window: [TRIGGER] ausgelöst durch .BAMPELERROR
+2026-08-04 15:28:56,337 [INFO] app.ui.main_window: [TRIGGER] Snapshot erstellt | Historie: 126 Einträge | Symbole: .BAMPELERROR, .BAMPELGELB, .BAMPELGRUEN, .BAMPELQUITERROR, .BAMPELROT, .BAMPELSTART, .BNOTAUS, .BSICHERUNGF3, MAIN.ISTEP | Zeitraum: 15:26:46.342 bis 15:28:56.334 | Notifications bleiben aktiv
+2026-08-04 15:28:56,339 [INFO] app.ui.main_window: [TRIGGER] Prompt-Vorschau aktualisiert
+2026-08-04 15:28:56,428 [INFO] app.llm.lm_studio_client: LLM-Anfrage an http://127.0.0.1:1234/v1/chat/completions (Modell: local-model)
+2026-08-04 15:29:18,657 [INFO] httpx: HTTP Request: POST http://127.0.0.1:1234/v1/chat/completions "HTTP/1.1 200 OK"
+2026-08-04 15:29:18,658 [INFO] app.llm.lm_studio_client: LLM-Antwort empfangen (1594 Zeichen)
+2026-08-04 15:29:18,660 [INFO] app.ui.main_window: [LLM] Antwort empfangen (1594 Zeichen)
+2026-08-04 15:29:56,982 [INFO] app.ui.main_window: [DIAGRAMM] Anzeigezeitfenster: 5 Minuten
+2026-08-04 15:29:59,555 [INFO] app.ui.main_window: [DIAGRAMM] Anzeigezeitfenster: 10 Minuten
+2026-08-04 15:30:03,157 [INFO] app.ui.main_window: [DIAGRAMM] Anzeigezeitfenster: 5 Minuten
+2026-08-04 15:30:17,855 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELERROR: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:30:17,855 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELGELB: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:30:17,856 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELGRUEN: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:30:17,856 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELQUITERROR: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:30:17,856 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELROT: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:30:17,856 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELSTART: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:30:17,856 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELSTOP: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:30:17,857 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BNOTAUS: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:30:17,857 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BSICHERUNGF1: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:30:17,857 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BSICHERUNGF2: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:30:17,857 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BSICHERUNGF3: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:30:17,857 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification MAIN.ISTEP: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:30:17,858 [INFO] app.ui.main_window: [AUFZEICHNUNG] gestoppt; Historie bleibt erhalten
+2026-08-04 15:30:19,027 [INFO] app.ui.main_window: [AUFZEICHNUNG] Start wird vorbereitet
+2026-08-04 15:30:19,195 [INFO] app.ads.ads_client: Notification registriert: .BAMPELERROR (Handle 674)
+2026-08-04 15:30:19,198 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELERROR registriert
+2026-08-04 15:30:19,393 [INFO] app.ads.ads_client: Notification registriert: .BAMPELGELB (Handle 675)
+2026-08-04 15:30:19,395 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELGELB registriert
+2026-08-04 15:30:19,572 [INFO] app.ads.ads_client: Notification registriert: .BAMPELGRUEN (Handle 676)
+2026-08-04 15:30:19,575 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELGRUEN registriert
+2026-08-04 15:30:19,763 [INFO] app.ads.ads_client: Notification registriert: .BAMPELQUITERROR (Handle 677)
+2026-08-04 15:30:19,765 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELQUITERROR registriert
+2026-08-04 15:30:19,922 [INFO] app.ads.ads_client: Notification registriert: .BAMPELROT (Handle 678)
+2026-08-04 15:30:19,925 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELROT registriert
+2026-08-04 15:30:20,072 [INFO] app.ads.ads_client: Notification registriert: .BAMPELSTART (Handle 679)
+2026-08-04 15:30:20,074 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELSTART registriert
+2026-08-04 15:30:20,226 [INFO] app.ads.ads_client: Notification registriert: .BAMPELSTOP (Handle 680)
+2026-08-04 15:30:20,227 [INFO] app.ui.main_window: [NOTIFICATION] .BAMPELSTOP registriert
+2026-08-04 15:30:20,462 [INFO] app.ads.ads_client: Notification registriert: .BNOTAUS (Handle 681)
+2026-08-04 15:30:20,463 [INFO] app.ui.main_window: [NOTIFICATION] .BNOTAUS registriert
+2026-08-04 15:30:20,623 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF1 (Handle 682)
+2026-08-04 15:30:20,625 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF1 registriert
+2026-08-04 15:30:20,743 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF2 (Handle 683)
+2026-08-04 15:30:20,744 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF2 registriert
+2026-08-04 15:30:20,881 [INFO] app.ads.ads_client: Notification registriert: .BSICHERUNGF3 (Handle 684)
+2026-08-04 15:30:20,882 [INFO] app.ui.main_window: [NOTIFICATION] .BSICHERUNGF3 registriert
+2026-08-04 15:30:20,993 [INFO] app.ads.ads_client: Notification registriert: MAIN.ISTEP (Handle 685)
+2026-08-04 15:30:20,993 [INFO] app.ui.main_window: [NOTIFICATION] MAIN.ISTEP registriert
+2026-08-04 15:30:20,994 [INFO] app.ui.main_window: [AUFZEICHNUNG] läuft
+2026-08-04 15:30:23,000 [INFO] app.ui.main_window: [TRIGGER] scharf: .BAMPELERROR | Flanke=rising | Rückblick=120 s | Nachlauf=10 s
+2026-08-04 15:30:38,588 [INFO] httpx: HTTP Request: GET http://127.0.0.1:1234/v1/models "HTTP/1.1 200 OK"
+2026-08-04 15:30:38,589 [INFO] app.ui.main_window: [LLM-CHECK] LM Studio erreichbar. Modelle: gemma-4-12b-it-qat, qwen3.6-35b-a3b, text-embedding-nomic-embed-text-v1.5
+2026-08-04 15:30:52,800 [INFO] app.ui.main_window: [TRIGGER] ausgelöst durch .BAMPELERROR
+2026-08-04 15:31:02,793 [INFO] app.ui.main_window: [TRIGGER] Snapshot erstellt | Historie: 119 Einträge | Symbole: .BAMPELERROR, .BAMPELGELB, .BAMPELGRUEN, .BAMPELQUITERROR, .BAMPELROT, .BAMPELSTART, .BAMPELSTOP, .BNOTAUS, .BSICHERUNGF1, .BSICHERUNGF2, .BSICHERUNGF3, MAIN.ISTEP | Zeitraum: 15:28:52.800 bis 15:31:02.790 | Notifications bleiben aktiv
+2026-08-04 15:31:02,795 [INFO] app.ui.main_window: [TRIGGER] Prompt-Vorschau aktualisiert
+2026-08-04 15:31:02,800 [INFO] app.llm.lm_studio_client: LLM-Anfrage an http://127.0.0.1:1234/v1/chat/completions (Modell: local-model)
+2026-08-04 15:31:19,001 [INFO] httpx: HTTP Request: POST http://127.0.0.1:1234/v1/chat/completions "HTTP/1.1 200 OK"
+2026-08-04 15:31:19,002 [INFO] app.llm.lm_studio_client: LLM-Antwort empfangen (1195 Zeichen)
+2026-08-04 15:31:19,004 [INFO] app.ui.main_window: [LLM] Antwort empfangen (1195 Zeichen)
+2026-08-04 15:32:18,426 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELERROR: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:32:18,426 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELGELB: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:32:18,427 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELGRUEN: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:32:18,427 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELQUITERROR: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:32:18,427 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELROT: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:32:18,427 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELSTART: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:32:18,428 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BAMPELSTOP: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:32:18,428 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BNOTAUS: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:32:18,428 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BSICHERUNGF1: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:32:18,428 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BSICHERUNGF2: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:32:18,428 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification .BSICHERUNGF3: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:32:18,428 [WARNING] app.ads.ads_client: Fehler beim Entfernen der Notification MAIN.ISTEP: Connection.del_device_notification() missing 1 required positional argument: 'user_handle'
+2026-08-04 15:32:18,429 [INFO] app.ui.main_window: [AUFZEICHNUNG] gestoppt; Historie bleibt erhalten

@@ -1,4 +1,4 @@
-"""Thread-sicheres Zustandsmodell fuer die vereinfachte Aufzeichnungsauswahl."""
+"""Thread-sicheres Zustandsmodell fuer Aufzeichnung und Diagrammfarben."""
 from __future__ import annotations
 
 import threading
@@ -6,6 +6,12 @@ from copy import copy
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Dict, Optional
+
+
+DEFAULT_PLOT_COLORS = (
+    "#4C72B0", "#DD8452", "#55A868", "#C44E52",
+    "#8172B3", "#937860", "#DA8BC3", "#8C8C8C",
+)
 
 
 @dataclass
@@ -18,17 +24,13 @@ class VariableState:
     timestamp: Optional[datetime] = None
     valid: bool = False
     recording: bool = False
+    plot_color: str = "#4C72B0"
     notification_handle: Optional[int] = None
     supported: bool = True
 
 
 class StateModel:
-    """Speichert Symbolzustand und die eine Auswahl `recording`.
-
-    Die Auswahl bedeutet gleichzeitig Anzeige, Historie, KI-Datenquelle und
-    Notification. Rueckgaben sind Kopien, damit ADS-Callbacks und UI nicht
-    dieselbe mutable Instanz veraendern.
-    """
+    """Speichert Symbolzustand, Aufzeichnungsauswahl und Diagrammfarbe."""
 
     def __init__(self) -> None:
         self._lock = threading.RLock()
@@ -75,6 +77,11 @@ class StateModel:
         with self._lock:
             if symbol in self._variables:
                 self._variables[symbol].recording = bool(recording)
+
+    def set_plot_color(self, symbol: str, color: str) -> None:
+        with self._lock:
+            if symbol in self._variables and color:
+                self._variables[symbol].plot_color = str(color)
 
     def get_recorded_symbols(self) -> list[VariableState]:
         with self._lock:

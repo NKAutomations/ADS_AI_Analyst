@@ -14,7 +14,7 @@ from datetime import datetime, timedelta
 from typing import Dict, List, Optional
 
 from PySide6.QtCore import Qt, QTimer, Signal, QObject
-from PySide6.QtGui import QFont, QColor
+from PySide6.QtGui import QFont, QColor, QPainter, QPen, QBrush, QFontMetrics
 from PySide6.QtWidgets import (
     QApplication,
     QCheckBox,
@@ -45,12 +45,13 @@ from PySide6.QtWidgets import (
     QTabWidget,
     QFileDialog,
     QScrollArea,
+    QColorDialog,
 )
 
 from app.ads.ads_client import AdsClient, AdsSymbolInfo
 from app.config.settings import load_config, save_config
 from app.domain.history_model import HistoryModel
-from app.domain.state_model import StateModel, VariableState
+from app.domain.state_model import StateModel, VariableState, DEFAULT_PLOT_COLORS
 from app.llm.lm_studio_client import LmStudioClient
 from app.llm.prompt_builder import build_user_message
 
@@ -64,6 +65,139 @@ class WorkerSignals(QObject):
     symbols_loaded = Signal(list)
     value_updated = Signal(str, object, object)
     analysis_result = Signal(str, bool)
+
+
+class DigitalTimelineWidget(QWidget):
+    """Zeigt aufgezeichnete BOOL-Werte als gestapelte digitale Zeitlinien.
+
+    Dies ist bewusst ein Zeitdiagramm und kein statistisches Histogramm:
+    TRUE wird als 1, FALSE als 0 und jede Wertänderung als Flanke dargestellt.
+    Die Daten stammen ausschließlich aus der HistoryModel-Historie.
+    """
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self._rows = []
+        self._from_dt = None
+        self._to_dt = None
+        self._message = "Noch keine aufgezeichneten BOOL-Daten vorhanden."
+        self.setMinimumWidth(900)
+        self.setMinimumHeight(160)
+
+    def set_data(self, rows, from_dt=None, to_dt=None):
+        self._rows = list(rows)
+        self._from_dt = from_dt
+        self._to_dt = to_dt
+        if not self._rows:
+            self._message = "Keine aufgezeichneten BOOL-Daten vorhanden."
+        else:
+            self._message = ""
+        height = max(160, 72 + len(self._rows) * 58)
+        self.setMinimumHeight(height)
+        self.resize(self.width(), height)
+        self.update()
+
+    @staticmethod
+    def _time_text(value):
+        return value.strftime("%H:%M:%S") if value else "-"
+
+    def _x_for(self, timestamp, start, end, left, plot_width):
+        total = (end - start).total_seconds()
+        if total <= 0:
+            return left
+        ratio = (timestamp - start).total_seconds() / total
+        return left + max(0.0, min(1.0, ratio)) * plot_width
+
+    def paintEvent(self, event):
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.Antialiasing, False)
+        painter.fillRect(self.rect(), QColor("#ffffff"))
+
+        left = 235
+        right = 35
+        top = 34
+        bottom = 34
+        plot_width = max(120, self.width() - left - right)
+
+        if not self._rows:
+            painter.setPen(QColor("#68737d"))
+            painter.drawText(20, 35, self._message)
+            return
+
+        all_entries = [entry for _, _, entries in self._rows for entry in entries]
+        if not all_entries:
+            painter.setPen(QColor("#68737d"))
+            painter.drawText(20, 35, "Keine Historieneinträge für aufgezeichnete BOOL-Variablen.")
+            return
+
+        start = self._from_dt or min(entry.timestamp for entry in all_entries)
+        end = self._to_dt or datetime.now()
+        if end <= start:
+            end = start + timedelta(seconds=1)
+
+        # Header and vertical time grid.
+        painter.setPen(QColor("#6b747d"))
+        painter.drawText(left, 18, self._time_text(start))
+        painter.drawText(left + plot_width - 48, 18, self._time_text(end))
+        grid_pen = QPen(QColor("#d9e0e6"), 1)
+        for index in range(11):
+            x = left + plot_width * index / 10.0
+            painter.setPen(grid_pen)
+            painter.drawLine(int(x), top - 10, int(x), top + len(self._rows) * 58)
+            if index not in (0, 10):
+                stamp = start + (end - start) * index / 10.0
+                painter.setPen(QColor("#7a858e"))
+                painter.drawText(int(x) - 28, 18, self._time_text(stamp))
+
+        for row_index, (symbol, color_name, entries) in enumerate(self._rows):
+            row_top = top + row_index * 58
+            high_y = row_top + 10
+            low_y = row_top + 34
+            base_color = QColor(color_name)
+            if not base_color.isValid():
+                base_color = QColor("#4c72b0")
+
+            painter.setPen(QColor("#2f3942"))
+            painter.drawText(10, row_top + 24, symbol)
+            painter.setPen(QColor("#aeb8c1"))
+            painter.drawLine(left, low_y, left + plot_width, low_y)
+            painter.setPen(QColor("#c7d0d8"))
+            painter.drawRect(left, row_top, plot_width, 43)
+
+            ordered = sorted(entries, key=lambda entry: entry.timestamp)
+            if not ordered:
+                continue
+            current = bool(ordered[0].value)
+            current_time = max(start, ordered[0].timestamp)
+            line_pen = QPen(base_color, 4)
+            fill_color = QColor(base_color)
+            fill_color.setAlpha(42)
+            painter.setPen(line_pen)
+            painter.setBrush(QBrush(fill_color))
+
+            for entry in ordered[1:]:
+                change_time = max(start, min(end, entry.timestamp))
+                x1 = self._x_for(current_time, start, end, left, plot_width)
+                x2 = self._x_for(change_time, start, end, left, plot_width)
+                y = high_y if current else low_y
+                painter.drawLine(int(x1), y, int(x2), y)
+                painter.fillRect(int(x1), row_top + 2, max(1, int(x2 - x1)), 39, fill_color)
+                new_value = bool(entry.value)
+                if new_value != current:
+                    painter.drawLine(int(x2), high_y, int(x2), low_y)
+                current = new_value
+                current_time = change_time
+
+            x1 = self._x_for(current_time, start, end, left, plot_width)
+            x2 = self._x_for(end, start, end, left, plot_width)
+            y = high_y if current else low_y
+            painter.drawLine(int(x1), y, int(x2), y)
+            painter.fillRect(int(x1), row_top + 2, max(1, int(x2 - x1)), 39, fill_color)
+            painter.setPen(QColor("#27313a"))
+            painter.drawText(left + plot_width + 8, high_y + 5 if current else low_y + 5, "1" if current else "0")
+
+        painter.setPen(QColor("#68737d"))
+        painter.drawText(10, top + len(self._rows) * 58 + 22, "TRUE = 1   |   FALSE = 0   |   Zeitraum: echte ADS-Historie")
 
 
 class SettingsDialog(QDialog):
@@ -232,11 +366,17 @@ class MainWindow(QMainWindow):
         self._recording_error = ""
         self._recording_generation = 0
         self._recording_worker_active = False
+        # Das Diagramm verwendet ein rollierendes Anzeigezeitfenster. Der
+        # Endzeitpunkt wird beim Stoppen eingefroren; die Historie bleibt davon
+        # unberührt und steht weiterhin vollständig für die KI-Analyse bereit.
+        self._timeline_window_seconds = 60
+        self._timeline_end: Optional[datetime] = None
         self._build_ui()
         self._connect_signals()
         self._apply_config_to_ui()
         self._refresh_timer = QTimer(self)
         self._refresh_timer.timeout.connect(self._refresh_table)
+        self._refresh_timer.timeout.connect(self._refresh_timeline)
         self._refresh_timer.start(500)
 
     # ------------------------------------------------------------------
@@ -336,20 +476,14 @@ class MainWindow(QMainWindow):
         btn_row = QHBoxLayout()
         self.btn_load_symbols = QPushButton("Alle Symbole auslesen")
         self.btn_load_symbols.setEnabled(False)
-        self.btn_start_recording = QPushButton("Aufzeichnung starten")
-        self.btn_start_recording.setEnabled(False)
-        self.btn_start_recording.setStyleSheet(
-            "background-color: #2e7d32; color: white; font-weight: bold;"
-        )
-        self.btn_stop_recording = QPushButton("Aufzeichnung stoppen")
-        self.btn_stop_recording.setEnabled(False)
-        self.btn_stop_recording.setStyleSheet(
-            "background-color: #c62828; color: white; font-weight: bold;"
-        )
+        self.btn_recording = QPushButton("Aufzeichnung starten")
+        self.btn_recording.setEnabled(False)
         btn_row.addWidget(self.btn_load_symbols)
-        btn_row.addWidget(self.btn_start_recording)
-        btn_row.addWidget(self.btn_stop_recording)
+        btn_row.addWidget(self.btn_recording)
         layout.addLayout(btn_row)
+        self.lbl_recording_status = QLabel("Aufzeichnung: gestoppt")
+        self.lbl_recording_status.setStyleSheet("color: #666; font-weight: bold;")
+        layout.addWidget(self.lbl_recording_status)
 
         filter_row = QHBoxLayout()
         filter_row.addWidget(QLabel("Filter:"))
@@ -360,9 +494,9 @@ class MainWindow(QMainWindow):
         layout.addLayout(filter_row)
 
         self.var_table = QTableWidget()
-        self.var_table.setColumnCount(6)
+        self.var_table.setColumnCount(7)
         self.var_table.setHorizontalHeaderLabels(
-            ["Symbol", "Typ", "TC-Typ", "Kommentar", "Aufzeichnen", "Wert"]
+            ["Symbol", "Typ", "TC-Typ", "Kommentar", "Farbe", "Aufzeichnen", "Wert"]
         )
         self.var_table.horizontalHeader().setSectionResizeMode(0, QHeaderView.Stretch)
         self.var_table.horizontalHeader().setSectionResizeMode(3, QHeaderView.Stretch)
@@ -557,6 +691,47 @@ class MainWindow(QMainWindow):
         prompt_layout.addWidget(btn_preview)
         tabs.addTab(prompt_widget, "Prompt-Vorschau (was geht an die KI?)")
 
+        # --- Tab 4: BOOL-Zeitdiagramm ---
+        chart_widget = QWidget()
+        chart_layout = QVBoxLayout(chart_widget)
+        chart_info = QLabel(
+            "Digitale Zeitlinien der aufgezeichneten BOOL-Variablen. "
+            "TRUE = 1, FALSE = 0. Farben werden in der Variablentabelle festgelegt."
+        )
+        chart_info.setStyleSheet("color: gray; font-size: 10px;")
+        chart_layout.addWidget(chart_info)
+        self.timeline_scroll = QScrollArea()
+        self.timeline_scroll.setWidgetResizable(True)
+        self.timeline_chart = DigitalTimelineWidget()
+        self.timeline_scroll.setWidget(self.timeline_chart)
+        chart_layout.addWidget(self.timeline_scroll)
+
+        timeline_controls = QHBoxLayout()
+        timeline_controls.addWidget(QLabel("Angezeigtes Zeitfenster:"))
+        self.cb_timeline_window = QComboBox()
+        for seconds, label in [
+            (30, "30 Sekunden"),
+            (60, "1 Minute"),
+            (120, "2 Minuten"),
+            (300, "5 Minuten"),
+            (600, "10 Minuten"),
+            (1800, "30 Minuten"),
+        ]:
+            self.cb_timeline_window.addItem(label, seconds)
+        self.cb_timeline_window.setCurrentIndex(1)
+        self.cb_timeline_window.setToolTip(
+            "Nur dieses Zeitfenster wird im BOOL-Zeitdiagramm angezeigt. "
+            "Ältere Daten bleiben für Historie und KI erhalten."
+        )
+        self.cb_timeline_window.currentIndexChanged.connect(self._on_timeline_window_changed)
+        timeline_controls.addWidget(self.cb_timeline_window)
+        self.lbl_timeline_info = QLabel("Diagramm: rollierend | Aufzeichnung gestoppt")
+        self.lbl_timeline_info.setStyleSheet("color: #68737d; font-size: 10px;")
+        timeline_controls.addWidget(self.lbl_timeline_info)
+        timeline_controls.addStretch()
+        chart_layout.addLayout(timeline_controls)
+        tabs.addTab(chart_widget, "BOOL-Zeitdiagramm")
+
         return tabs
 
     # ------------------------------------------------------------------
@@ -567,8 +742,7 @@ class MainWindow(QMainWindow):
         self.btn_connect.clicked.connect(self._on_connect)
         self.btn_disconnect.clicked.connect(self._on_disconnect)
         self.btn_load_symbols.clicked.connect(self._on_load_symbols)
-        self.btn_start_recording.clicked.connect(self._start_recording)
-        self.btn_stop_recording.clicked.connect(self._stop_recording)
+        self.btn_recording.clicked.connect(self._toggle_recording)
         self.btn_analyze.clicked.connect(self._on_analyze)
         self.btn_check_llm.clicked.connect(self._on_check_llm)
         self.btn_settings.clicked.connect(self._open_settings)
@@ -654,7 +828,7 @@ class MainWindow(QMainWindow):
         self.btn_connect.setEnabled(True)
         self.btn_disconnect.setEnabled(False)
         self.btn_load_symbols.setEnabled(False)
-        self.btn_start_recording.setEnabled(False)
+        self._timeline_end = None
         self.state_model.clear()
         self.var_table.setRowCount(0)
         self._last_values.clear()
@@ -691,19 +865,19 @@ class MainWindow(QMainWindow):
             self._append_sys("Keine Symbole geladen.")
             return
         var_states = []
-        for sym in symbols:
+        for index, sym in enumerate(symbols):
             vs = VariableState(
                 symbol=sym.name,
                 data_type=sym.data_type,
                 tc_type=sym.tc_type,
                 comment=sym.comment,
                 supported=sym.supported,
+                plot_color=DEFAULT_PLOT_COLORS[index % len(DEFAULT_PLOT_COLORS)],
             )
             var_states.append(vs)
         self.state_model.set_symbols(var_states)
         self._populate_table(var_states)
         self._populate_trigger_symbols(var_states)
-        self.btn_start_recording.setEnabled(bool(self.ads_client and self.ads_client.connected))
         self._update_control_states()
         self._append_sys(str(len(symbols)) + " Symbole geladen.")
 
@@ -783,6 +957,17 @@ class MainWindow(QMainWindow):
         return ((self._trigger_edge in ("rising", "both") and rising) or
                 (self._trigger_edge in ("falling", "both") and falling))
 
+    def _set_color_button_style(self, button: QPushButton, color_name: str) -> None:
+        color = QColor(color_name)
+        if not color.isValid():
+            color = QColor("#4c72b0")
+        button.setStyleSheet(
+            "QPushButton { background-color: %s; border: 1px solid #59636d; "
+            "border-radius: 3px; min-width: 24px; max-width: 34px; }"
+            % color.name()
+        )
+        button.setToolTip("Diagrammfarbe: " + color.name().upper())
+
     def _populate_table(self, var_states: list) -> None:
         self.var_table.setSortingEnabled(False)
         self.var_table.setRowCount(0)
@@ -793,27 +978,64 @@ class MainWindow(QMainWindow):
             self.var_table.setItem(row, 1, QTableWidgetItem(vs.data_type))
             self.var_table.setItem(row, 2, QTableWidgetItem(vs.tc_type))
             self.var_table.setItem(row, 3, QTableWidgetItem(vs.comment))
+
+            color_button = QPushButton()
+            self._set_color_button_style(color_button, vs.plot_color)
+            color_button.setEnabled(vs.supported)
+            color_button.clicked.connect(
+                lambda _checked=False, symbol=vs.symbol: self._choose_plot_color(symbol)
+            )
+            color_cell = QWidget()
+            color_layout = QHBoxLayout(color_cell)
+            color_layout.addWidget(color_button)
+            color_layout.setAlignment(Qt.AlignCenter)
+            color_layout.setContentsMargins(0, 0, 0, 0)
+            self.var_table.setCellWidget(row, 4, color_cell)
+
             cb = QCheckBox()
             cb.setChecked(bool(vs.recording))
             if not vs.supported:
                 cb.setEnabled(False)
                 cb.setToolTip("Komplexer oder unbekannter Typ - nicht unterstützt")
             cb.stateChanged.connect(
-                lambda state, s=vs.symbol: self._on_recording_checkbox_changed(s, state)
+                lambda state, symbol=vs.symbol: self._on_recording_checkbox_changed(symbol, state)
             )
             cell_widget = QWidget()
             cell_layout = QHBoxLayout(cell_widget)
             cell_layout.addWidget(cb)
             cell_layout.setAlignment(Qt.AlignCenter)
             cell_layout.setContentsMargins(0, 0, 0, 0)
-            self.var_table.setCellWidget(row, 4, cell_widget)
+            self.var_table.setCellWidget(row, 5, cell_widget)
+
             val_item = QTableWidgetItem("-")
             if not vs.supported:
                 val_item.setForeground(QColor("gray"))
                 val_item.setText("(nicht unterstützt)")
-            self.var_table.setItem(row, 5, val_item)
+            self.var_table.setItem(row, 6, val_item)
         self.var_table.setSortingEnabled(True)
         self._apply_filter()
+
+    def _choose_plot_color(self, symbol: str) -> None:
+        if self._recording_status in ("STARTING", "RECORDING", "STOPPING"):
+            return
+        state = self.state_model.get(symbol)
+        if state is None:
+            return
+        selected = QColorDialog.getColor(QColor(state.plot_color), self, "Diagrammfarbe auswählen")
+        if not selected.isValid():
+            return
+        self.state_model.set_plot_color(symbol, selected.name())
+        for row in range(self.var_table.rowCount()):
+            item = self.var_table.item(row, 0)
+            if item and item.text() == symbol:
+                cell = self.var_table.cellWidget(row, 4)
+                if cell:
+                    button = cell.findChild(QPushButton)
+                    if button:
+                        self._set_color_button_style(button, selected.name())
+                break
+        self._refresh_timeline()
+        self._append_sys("[DIAGRAMM] Farbe geändert: " + symbol + " = " + selected.name().upper())
 
     def _on_recording_checkbox_changed(self, symbol: str, state: int) -> None:
         self.state_model.set_recording(symbol, state == Qt.Checked)
@@ -825,7 +1047,7 @@ class MainWindow(QMainWindow):
             if sym_item is None:
                 continue
             self.state_model.set_recording(
-                sym_item.text(), self._get_checkbox_state(row, 4)
+                sym_item.text(), self._get_checkbox_state(row, 5)
             )
 
     def _get_checkbox_state(self, row: int, col: int) -> bool:
@@ -846,6 +1068,37 @@ class MainWindow(QMainWindow):
     # Aufzeichnung
     # ------------------------------------------------------------------
 
+    def _on_timeline_window_changed(self, index: int) -> None:
+        value = self.cb_timeline_window.itemData(index)
+        if value is None:
+            return
+        self._timeline_window_seconds = int(value)
+        self._refresh_timeline()
+        self._append_sys(
+            "[DIAGRAMM] Anzeigezeitfenster: "
+            + self.cb_timeline_window.currentText()
+        )
+
+    def _timeline_current_end(self) -> datetime:
+        """Liefert den Live- oder eingefrorenen Endzeitpunkt des Diagramms."""
+        if self._recording_status in ("STARTING", "RECORDING"):
+            self._timeline_end = datetime.now()
+        elif self._timeline_end is None:
+            # Beim initialen Anzeigen ohne laufende Aufzeichnung nicht ständig
+            # weiterlaufen: vorhandene Historie ist der feste Bezugspunkt.
+            entries = self.history_model.get_window(None, None)
+            self._timeline_end = max(
+                (entry.timestamp for entry in entries),
+                default=datetime.now(),
+            )
+        return self._timeline_end
+
+    def _toggle_recording(self) -> None:
+        if self._recording_status in ("STARTING", "RECORDING") or self._recording_worker_active:
+            self._stop_recording()
+        else:
+            self._start_recording()
+
     def _start_recording(self) -> None:
         if not self.ads_client or not self.ads_client.connected:
             return
@@ -862,6 +1115,7 @@ class MainWindow(QMainWindow):
         run_id = self._recording_generation
         self._recording_status = "STARTING"
         self._recording_error = ""
+        self._timeline_end = datetime.now()
         self._recording_worker_active = True
         self._update_control_states()
         self.ads_client.stop_all_notifications()
@@ -901,6 +1155,10 @@ class MainWindow(QMainWindow):
 
     def _stop_recording(self) -> None:
         was_active = self._recording_status != "STOPPED" or self._recording_worker_active
+        if was_active:
+            # Danach darf _refresh_timeline() nicht mehr datetime.now() als
+            # Endpunkt verwenden. Das Diagramm bleibt visuell stehen.
+            self._timeline_end = datetime.now()
         self._recording_generation += 1
         if self._recording_worker_active:
             self._recording_status = "STOPPING"
@@ -944,18 +1202,71 @@ class MainWindow(QMainWindow):
     def _update_control_states(self) -> None:
         connected = bool(self.ads_client and self.ads_client.connected)
         has_symbols = self.var_table.rowCount() > 0
+        active = self._recording_status in ("STARTING", "RECORDING", "STOPPING")
         is_recording = self._recording_status == "RECORDING"
-        is_starting = self._recording_status == "STARTING"
-        self.btn_start_recording.setEnabled(
-            connected and has_symbols and not self._recording_worker_active
-            and self._recording_status not in ("RECORDING", "STARTING", "STOPPING")
-        )
-        self.btn_stop_recording.setEnabled(
-            self._recording_worker_active or is_recording or is_starting
-            or self._recording_status in ("STOPPING", "ERROR")
-        )
+
+        if self._recording_status == "STARTING":
+            self.lbl_recording_status.setText("Aufzeichnung: wird gestartet ...")
+            self.lbl_recording_status.setStyleSheet("color: #1565c0; font-weight: bold;")
+            self.btn_recording.setText("Aufzeichnung wird gestartet ...")
+            self.btn_recording.setEnabled(False)
+            self.btn_recording.setStyleSheet("background-color: #1565c0; color: white; font-weight: bold;")
+        elif self._recording_status == "RECORDING":
+            self.lbl_recording_status.setText("Aufzeichnung: AKTIV")
+            self.lbl_recording_status.setStyleSheet("color: #087f23; font-weight: bold;")
+            self.btn_recording.setText("Aufzeichnung stoppen")
+            self.btn_recording.setEnabled(True)
+            self.btn_recording.setStyleSheet("background-color: #c62828; color: white; font-weight: bold;")
+        elif self._recording_status == "STOPPING":
+            self.lbl_recording_status.setText("Aufzeichnung: wird gestoppt ...")
+            self.lbl_recording_status.setStyleSheet("color: #ef6c00; font-weight: bold;")
+            self.btn_recording.setText("Aufzeichnung wird gestoppt ...")
+            self.btn_recording.setEnabled(False)
+            self.btn_recording.setStyleSheet("background-color: #ef6c00; color: white; font-weight: bold;")
+        elif self._recording_status == "ERROR":
+            self.lbl_recording_status.setText("Aufzeichnung: FEHLER")
+            self.lbl_recording_status.setStyleSheet("color: #c62828; font-weight: bold;")
+            self.btn_recording.setText("Aufzeichnung erneut starten")
+            self.btn_recording.setEnabled(connected and has_symbols and not self._recording_worker_active)
+            self.btn_recording.setStyleSheet("background-color: #ef6c00; color: white; font-weight: bold;")
+        else:
+            self.lbl_recording_status.setText("Aufzeichnung: gestoppt")
+            self.lbl_recording_status.setStyleSheet("color: #666; font-weight: bold;")
+            self.btn_recording.setText("Aufzeichnung starten")
+            self.btn_recording.setEnabled(connected and has_symbols and not self._recording_worker_active)
+            self.btn_recording.setStyleSheet("background-color: #2e7d32; color: white; font-weight: bold;")
+
+        if hasattr(self, "lbl_timeline_info"):
+            mode = "live" if self._recording_status in ("STARTING", "RECORDING") else "eingefroren"
+            self.lbl_timeline_info.setText(
+                "Diagramm: rollierend | " + mode
+                + " | Fenster: " + self.cb_timeline_window.currentText()
+            )
+
+        # Auswahl und Farben bleiben während einer laufenden Aufzeichnung fest.
+        for row in range(self.var_table.rowCount()):
+            symbol_item = self.var_table.item(row, 0)
+            if symbol_item is None:
+                continue
+            state = self.state_model.get(symbol_item.text())
+            if state is None:
+                continue
+            self.var_table.setRowHidden(row, active and not state.recording)
+            check_cell = self.var_table.cellWidget(row, 5)
+            if check_cell:
+                checkbox = check_cell.findChild(QCheckBox)
+                if checkbox:
+                    checkbox.setEnabled(not active and state.supported)
+            color_cell = self.var_table.cellWidget(row, 4)
+            if color_cell:
+                color_button = color_cell.findChild(QPushButton)
+                if color_button:
+                    color_button.setEnabled(not active and state.supported)
+
         has_trigger = bool(self.cb_trigger_symbol.currentData())
-        self.btn_trigger_arm.setEnabled(connected and is_recording and has_trigger and not self._trigger_analysis_running)
+        self.btn_trigger_arm.setEnabled(
+            connected and is_recording and has_trigger and not self._trigger_analysis_running
+        )
         if not self._trigger_armed and has_trigger and is_recording:
             self.btn_trigger_arm.setText("Trigger scharf schalten")
             self.btn_trigger_arm.setStyleSheet("background-color: #2e7d32; color: white; font-weight: bold;")
@@ -1103,7 +1414,7 @@ class MainWindow(QMainWindow):
             vs = self.state_model.get(symbol)
             if vs is None:
                 continue
-            val_item = self.var_table.item(row, 5)
+            val_item = self.var_table.item(row, 6)
             if val_item is None:
                 continue
             if not vs.recording:
@@ -1126,6 +1437,35 @@ class MainWindow(QMainWindow):
                     val_item.setBackground(QColor("#eeeeee"))
             else:
                 val_item.setBackground(QColor("#ffffff"))
+
+    def _refresh_timeline(self) -> None:
+        """Aktualisiert nur das rollierende/fixierte Diagrammfenster.
+
+        Die HistoryModel-Einträge werden nicht gelöscht. Für die Darstellung
+        werden lediglich Einträge außerhalb des gewählten Zeitfensters
+        herausgefiltert.
+        """
+        recorded = [
+            v for v in self.state_model.get_recorded_symbols()
+            if v.data_type.upper() == "BOOL"
+        ]
+        end = self._timeline_current_end()
+        start = end - timedelta(seconds=self._timeline_window_seconds)
+        symbols = [v.symbol for v in recorded]
+        history = self.history_model.get_window(
+            start, end, symbols=symbols
+        )
+        rows = []
+        for state in recorded:
+            entries = [entry for entry in history if entry.symbol == state.symbol]
+            rows.append((state.symbol, state.plot_color, entries))
+        self.timeline_chart.set_data(rows, from_dt=start, to_dt=end)
+        if hasattr(self, "lbl_timeline_info"):
+            mode = "live" if self._recording_status in ("STARTING", "RECORDING") else "eingefroren"
+            self.lbl_timeline_info.setText(
+                "Diagramm: rollierend | " + mode
+                + " | Fenster: " + self.cb_timeline_window.currentText()
+            )
 
     # ------------------------------------------------------------------
     # Prompt-Vorschau
