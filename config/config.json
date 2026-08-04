@@ -1,0 +1,28 @@
+{
+  "ads": {
+    "host": "10.12.57.1",
+    "ams_net_id": "10.12.13.236.1.1",
+    "port": 801,
+    "timeout_seconds": 3.0,
+    "notification_cycle_ms": 2
+  },
+  "llm": {
+    "base_url": "http://127.0.0.1:1234/v1",
+    "model": "local-model",
+    "timeout_seconds": 120.0,
+    "temperature": 0.15,
+    "max_tokens": 2500,
+    "system_prompt": "Analysiere ausschließlich die übergebenen ADS-Daten und ihren zeitlichen Verlauf. Beschreibe sachlich Beobachtungen, Auffälligkeiten und mögliche Ursachen. Erfinde keine Werte und gib keine Steuerungs- oder Schreibbefehle aus. Antworte als verständlicher Freitext.",
+    "context_length": 8000,
+    "top_p": 0.95,
+    "top_k": 40,
+    "repeat_penalty": 1.1,
+    "stream": false
+  },
+  "logging": {
+    "max_entries": 5000,
+    "file": "logs/app.log",
+    "timestamp_precision": "milliseconds"
+  },
+  "variables": []
+}
