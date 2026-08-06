@@ -54,6 +54,10 @@ from app.domain.history_model import HistoryModel
 from app.domain.state_model import StateModel, VariableState, DEFAULT_PLOT_COLORS
 from app.llm.lm_studio_client import LmStudioClient
 from app.llm.prompt_builder import build_user_message
+from app.config.prompt_library import (
+    load_library, add_prompt, update_prompt, delete_prompt,
+    get_prompt_by_id, is_builtin,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -371,6 +375,8 @@ class MainWindow(QMainWindow):
         # unberührt und steht weiterhin vollständig für die KI-Analyse bereit.
         self._timeline_window_seconds = 60
         self._timeline_end: Optional[datetime] = None
+        self._prompt_library: list = load_library()
+        self._active_prompt_id: str = ""
         self._build_ui()
         self._connect_signals()
         self._apply_config_to_ui()
@@ -571,6 +577,28 @@ class MainWindow(QMainWindow):
         time_row.addWidget(self.btn_now)
         layout.addLayout(time_row)
 
+        lib_box = QGroupBox("Prompt-Bibliothek")
+        lib_layout = QVBoxLayout(lib_box)
+        lib_row1 = QHBoxLayout()
+        lib_row1.addWidget(QLabel("Prompt:"))
+        self.cb_prompt_library = QComboBox()
+        self.cb_prompt_library.setMinimumWidth(220)
+        lib_row1.addWidget(self.cb_prompt_library, 1)
+        self.btn_prompt_load = QPushButton("Laden")
+        lib_row1.addWidget(self.btn_prompt_load)
+        lib_layout.addLayout(lib_row1)
+        lib_row2 = QHBoxLayout()
+        self.btn_prompt_save_as = QPushButton("Speichern unter...")
+        self.btn_prompt_rename = QPushButton("Umbenennen")
+        self.btn_prompt_delete = QPushButton("Löschen")
+        self.btn_prompt_delete.setStyleSheet("color: #c62828;")
+        lib_row2.addWidget(self.btn_prompt_save_as)
+        lib_row2.addWidget(self.btn_prompt_rename)
+        lib_row2.addWidget(self.btn_prompt_delete)
+        lib_row2.addStretch()
+        lib_layout.addLayout(lib_row2)
+        layout.addWidget(lib_box)
+
         layout.addWidget(QLabel("System-Prompt (editierbar):"))
         self.te_prompt = QPlainTextEdit()
         self.te_prompt.setMaximumHeight(80)
@@ -744,6 +772,11 @@ class MainWindow(QMainWindow):
         self.btn_load_symbols.clicked.connect(self._on_load_symbols)
         self.btn_recording.clicked.connect(self._toggle_recording)
         self.btn_analyze.clicked.connect(self._on_analyze)
+        self.btn_prompt_load.clicked.connect(self._on_prompt_load)
+        self.btn_prompt_save_as.clicked.connect(self._on_prompt_save_as)
+        self.btn_prompt_rename.clicked.connect(self._on_prompt_rename)
+        self.btn_prompt_delete.clicked.connect(self._on_prompt_delete)
+        self.cb_prompt_library.currentIndexChanged.connect(self._on_prompt_selection_changed)
         self.btn_check_llm.clicked.connect(self._on_check_llm)
         self.btn_settings.clicked.connect(self._open_settings)
         self.btn_trigger_arm.clicked.connect(self._arm_trigger)
@@ -769,6 +802,7 @@ class MainWindow(QMainWindow):
         self.sb_max_entries.setValue(
             self.cfg.get("logging", {}).get("max_entries", 5000)
         )
+        self._refresh_prompt_library_dropdown()
 
     # ------------------------------------------------------------------
     # Verbindung
@@ -1650,6 +1684,115 @@ class MainWindow(QMainWindow):
         self.cfg = _default_config()
         self._apply_config_to_ui()
         self._append_sys("[CONFIG] Standardwerte geladen")
+
+
+    # ------------------------------------------------------------------
+    # Prompt-Bibliothek
+    # ------------------------------------------------------------------
+
+    def _refresh_prompt_library_dropdown(self) -> None:
+        self.cb_prompt_library.blockSignals(True)
+        self.cb_prompt_library.clear()
+        groups = (
+            ("-- Vordefinierte Prompts --", [p for p in self._prompt_library if p.get("builtin")]),
+            ("-- Eigene Prompts --", [p for p in self._prompt_library if not p.get("builtin")]),
+        )
+        for heading, prompts in groups:
+            if not prompts:
+                continue
+            self.cb_prompt_library.addItem(heading, None)
+            item = self.cb_prompt_library.model().item(self.cb_prompt_library.count() - 1)
+            if item is not None:
+                item.setEnabled(False)
+            for prompt in prompts:
+                prefix = "[Standard] " if prompt.get("builtin") else ""
+                self.cb_prompt_library.addItem(prefix + prompt["name"], prompt["id"])
+        target = self._active_prompt_id or self.cfg.get("llm", {}).get("active_prompt_id", "")
+        index = self.cb_prompt_library.findData(target) if target else -1
+        if index < 0:
+            index = next((i for i in range(self.cb_prompt_library.count()) if self.cb_prompt_library.itemData(i)), -1)
+        if index >= 0:
+            self.cb_prompt_library.setCurrentIndex(index)
+        self.cb_prompt_library.blockSignals(False)
+        self._update_library_button_states()
+
+    def _on_prompt_selection_changed(self) -> None:
+        self._update_library_button_states()
+
+    def _update_library_button_states(self) -> None:
+        prompt_id = self.cb_prompt_library.currentData()
+        protected = is_builtin(self._prompt_library, prompt_id or "")
+        self.btn_prompt_load.setEnabled(bool(prompt_id))
+        self.btn_prompt_rename.setEnabled(bool(prompt_id) and not protected)
+        self.btn_prompt_delete.setEnabled(bool(prompt_id) and not protected)
+
+    def _on_prompt_load(self) -> None:
+        prompt_id = self.cb_prompt_library.currentData()
+        prompt = get_prompt_by_id(self._prompt_library, prompt_id or "")
+        if prompt is None:
+            return
+        self.te_prompt.setPlainText(prompt["text"])
+        self._active_prompt_id = prompt_id
+        self.cfg.setdefault("llm", {})["system_prompt"] = prompt["text"]
+        self.cfg["llm"]["active_prompt_id"] = prompt_id
+        save_config(self.cfg)
+        self._update_prompt_preview()
+        self._append_sys("[PROMPT] Geladen: " + prompt["name"])
+
+    def _on_prompt_save_as(self) -> None:
+        from PySide6.QtWidgets import QInputDialog
+        text = self.te_prompt.toPlainText().strip()
+        if not text:
+            QMessageBox.warning(self, "Prompt leer", "Der Prompt-Editor ist leer.")
+            return
+        name, ok = QInputDialog.getText(self, "Prompt speichern", "Name des Prompts:")
+        if not ok or not name.strip():
+            return
+        if any(p["name"].casefold() == name.strip().casefold() for p in self._prompt_library):
+            QMessageBox.warning(self, "Name vorhanden", "Dieser Prompt-Name ist bereits vorhanden.")
+            return
+        self._prompt_library, prompt_id = add_prompt(self._prompt_library, name, text)
+        self._active_prompt_id = prompt_id
+        self.cfg.setdefault("llm", {})["system_prompt"] = text
+        self.cfg["llm"]["active_prompt_id"] = prompt_id
+        save_config(self.cfg)
+        self._refresh_prompt_library_dropdown()
+        self._append_sys("[PROMPT] Gespeichert: " + name.strip())
+
+    def _on_prompt_rename(self) -> None:
+        from PySide6.QtWidgets import QInputDialog
+        prompt_id = self.cb_prompt_library.currentData()
+        if not prompt_id or is_builtin(self._prompt_library, prompt_id):
+            return
+        prompt = get_prompt_by_id(self._prompt_library, prompt_id)
+        if prompt is None:
+            return
+        name, ok = QInputDialog.getText(self, "Prompt umbenennen", "Neuer Name:", text=prompt["name"])
+        if not ok or not name.strip():
+            return
+        if any(p["id"] != prompt_id and p["name"].casefold() == name.strip().casefold() for p in self._prompt_library):
+            QMessageBox.warning(self, "Name vorhanden", "Dieser Prompt-Name ist bereits vorhanden.")
+            return
+        self._prompt_library = update_prompt(self._prompt_library, prompt_id, name, prompt["text"])
+        self._active_prompt_id = prompt_id
+        self._refresh_prompt_library_dropdown()
+        self._append_sys("[PROMPT] Umbenannt: " + name.strip())
+
+    def _on_prompt_delete(self) -> None:
+        prompt_id = self.cb_prompt_library.currentData()
+        if not prompt_id or is_builtin(self._prompt_library, prompt_id):
+            return
+        prompt = get_prompt_by_id(self._prompt_library, prompt_id)
+        if prompt is None:
+            return
+        answer = QMessageBox.question(self, "Prompt löschen", "Prompt '" + prompt["name"] + "' wirklich löschen?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        if answer != QMessageBox.Yes:
+            return
+        self._prompt_library = delete_prompt(self._prompt_library, prompt_id)
+        if self._active_prompt_id == prompt_id:
+            self._active_prompt_id = ""
+        self._refresh_prompt_library_dropdown()
+        self._append_sys("[PROMPT] Gelöscht: " + prompt["name"])
 
     def closeEvent(self, event) -> None:
         self._stop_recording()
