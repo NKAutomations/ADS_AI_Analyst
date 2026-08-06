@@ -1,4 +1,4 @@
-# ADS_KI_Analyse v1.2.0
+# ADS_KI_Analyse 
 
 Lokales Windows-Desktopwerkzeug zur read-only Überwachung, Aufzeichnung und Analyse echter Beckhoff-TwinCAT-Daten über ADS mit einem lokal betriebenen LLM über LM Studio.
 
